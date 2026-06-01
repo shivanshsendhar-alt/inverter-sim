@@ -1,506 +1,568 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Hyper Study Runner V7.4</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hyper Study Runner V6 – Exam Domination Update</title>
 <style>
 :root{
-  --bg:#050713; --panel:rgba(13,18,46,.92); --panel2:rgba(8,12,30,.98);
-  --text:#edf4ff; --muted:#99addc; --cyan:#41f3ff; --blue:#4f7cff; --purple:#b44cff;
-  --green:#32f59c; --gold:#ffd65c; --red:#ff688f; --line:rgba(108,138,255,.16);
-  --radius:18px; --radius2:22px; --shadow:0 0 18px rgba(65,243,255,.16),0 0 34px rgba(180,76,255,.10);
+  --bg:#060816;--panel:#0e1434cc;--cyan:#45f3ff;--blue:#4c7dff;--purple:#b14cff;--green:#30f59a;--muted:#95a8d8;--text:#eaf2ff;
+  --radius:16px;--glass:rgba(255,255,255,0.03)
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:
- radial-gradient(circle at 10% 10%, rgba(79,124,255,.14), transparent 24%),
- radial-gradient(circle at 90% 15%, rgba(180,76,255,.12), transparent 20%),
- radial-gradient(circle at 65% 80%, rgba(65,243,255,.10), transparent 26%),
- linear-gradient(180deg,#050713,#060913 40%,#03050d);
- color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;
-background-image:linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
-background-size:44px 44px,44px 44px}
-#bgParticles{position:fixed;inset:0;z-index:0;pointer-events:none}
-.particle{position:absolute;border-radius:999px;background:radial-gradient(circle, rgba(65,243,255,.95), rgba(65,243,255,.06) 60%, transparent 70%);box-shadow:0 0 14px rgba(65,243,255,.42)}
-.app{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:16px}
-.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-bottom:16px}
-.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius2);box-shadow:var(--shadow);backdrop-filter:blur(12px);padding:16px;position:relative;overflow:hidden}
-.panel::after{content:"";position:absolute;inset:-2px;background:linear-gradient(90deg,transparent,rgba(65,243,255,.10),transparent);transform:translateX(-120%);animation:scan 7s linear infinite;pointer-events:none}
-@keyframes scan{to{transform:translateX(120%)}}
-.headerTitle{font-size:clamp(24px,3vw,44px);font-weight:950;line-height:1.04}
-.headerSub{color:var(--muted);margin-top:8px;line-height:1.55;font-size:14px}
-.topStats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
-.stat{padding:14px;border-radius:16px;background:linear-gradient(180deg,rgba(12,18,45,.96),rgba(7,10,24,.96));border:1px solid rgba(108,138,255,.14)}
-.stat .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1.2px}
-.stat .value{font-size:22px;font-weight:900;margin-top:6px}
-.levelOrb{display:grid;place-items:center;text-align:center}
-.orb{width:min(260px,100%);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;position:relative;background:radial-gradient(circle at center, rgba(65,243,255,.14), rgba(180,76,255,.10) 48%, rgba(6,8,18,.94) 74%);border:1px solid rgba(65,243,255,.22)}
-.bigLevel{font-size:58px;font-weight:950;color:var(--cyan);text-shadow:0 0 18px rgba(65,243,255,.75)}
-.bigRank{font-size:16px;margin-top:6px;color:#fff}
-.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(65,243,255,.09);border:1px solid rgba(65,243,255,.18);color:#dffcff;font-size:12px;font-weight:700}
-.progress{height:16px;border-radius:999px;background:#0e1438;border:1px solid rgba(108,138,255,.14);overflow:hidden}
-.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--purple))}
-.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
-.section{padding:16px}
-.sectionHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-.sectionHead h2{font-size:18px;margin:0;letter-spacing:.8px;text-transform:uppercase}
-.small{color:var(--muted);font-size:12px}
-.btn{cursor:pointer;border:none;border-radius:12px;padding:10px 14px;font-weight:800;color:white;background:linear-gradient(180deg,rgba(78,124,255,.98),rgba(35,52,136,.98))}
-.btn.secondary{background:linear-gradient(180deg,rgba(22,30,68,.95),rgba(9,13,30,.98));border:1px solid rgba(255,255,255,.06)}
-.btn.good{background:linear-gradient(180deg,rgba(50,245,156,.98),rgba(17,120,76,.98));color:#04140d}
-.btn.warn{background:linear-gradient(180deg,rgba(255,214,92,.98),rgba(170,120,8,.98));color:#1c1200}
-.btn.danger{background:linear-gradient(180deg,rgba(255,104,143,.98),rgba(151,39,80,.98))}
-.btn:active{transform:translateY(1px)}
-input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.96);border:1px solid rgba(108,138,255,.16);color:var(--text);outline:none}
-.chapterGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.chapter{padding:14px;border-radius:16px;background:linear-gradient(180deg,rgba(10,15,36,.95),rgba(7,9,20,.98));border:1px solid rgba(108,138,255,.14);position:relative;min-height:182px}
-.chapter.completed{border-color:rgba(50,245,156,.32)}
-.chapter.completed::after{content:"✓";position:absolute;top:10px;right:10px;color:var(--green);font-weight:900}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+ radial-gradient(circle at 10% 10%, rgba(76,123,255,.07), transparent 20%),
+ radial-gradient(circle at 90% 20%, rgba(177,76,255,.05), transparent 18%),
+ linear-gradient(180deg,#040610 0%, #07102a 60%);color:var(--text);-webkit-font-smoothing:antialiased}
+.app{max-width:1400px;margin:14px auto;padding:14px;position:relative;z-index:2}
+.header{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.logo{padding:12px 16px;border-radius:12px;background:linear-gradient(90deg, rgba(74,125,255,.14), rgba(177,76,255,.06));box-shadow:0 8px 40px rgba(76,123,255,.06);border:1px solid rgba(76,123,255,.12);font-weight:800}
+.title{font-size:20px;font-weight:900}
+.subtitle{color:var(--muted);font-size:13px;margin-left:auto}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.panel{background:linear-gradient(180deg, rgba(12,16,36,.9), rgba(6,8,22,.9));border-radius:var(--radius);padding:14px;border:1px solid rgba(77,124,255,.08);box-shadow:0 8px 40px rgba(69,243,255,.03)}
+.left{grid-column:span 7}
+.right{grid-column:span 5}
+.row{display:flex;gap:12px;align-items:center}
+.stat{flex:1;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(10,14,35,.6), rgba(6,10,26,.6));border:1px solid rgba(74,111,255,.06);text-align:center}
+.stat .label{font-size:12px;color:var(--muted);text-transform:uppercase}
+.stat .value{font-weight:900;font-size:20px;margin-top:6px}
+.progress{height:14px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,.01));overflow:hidden;border:1px solid rgba(77,124,255,.06)}
+.progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--purple));box-shadow:0 6px 22px rgba(69,243,255,.08);transition:width .6s cubic-bezier(.2,.9,.2,1)}
+.level-badge{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(10,14,30,.6), rgba(10,12,20,.6));border:1px solid rgba(69,243,255,.05)}
+.level-num{font-size:48px;font-weight:900;color:var(--cyan);text-shadow:0 4px 28px rgba(69,243,255,.06)}
+.pill{padding:6px 10px;border-radius:999px;background:rgba(69,243,255,.06);border:1px solid rgba(69,243,255,.06);color:var(--cyan);font-weight:700;font-size:12px}
+.chapter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.chapter{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(8,12,30,.6), rgba(6,8,18,.6));border:1px solid rgba(77,124,255,.06)}
 .chapter h3{margin:0;font-size:14px}
-.chapter p{margin:8px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
-.chapter .reward{margin-top:8px;font-size:12px;color:#dffcff}
-.btnRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.timerWrap{display:grid;place-items:center;text-align:center;padding:16px}
-.timer{font-size:clamp(44px,7vw,92px);font-weight:950;color:#fff;text-shadow:0 0 12px rgba(65,243,255,.66),0 0 24px rgba(180,76,255,.28);letter-spacing:2px}
-.quests,.achievements,.pets,.skills,.leaders,.shop{display:grid;gap:10px}
-.quest,.achievement,.pet,.skill,.leader,.shopItem{padding:12px;border-radius:14px;background:linear-gradient(180deg,rgba(9,13,30,.95),rgba(6,9,18,.98));border:1px solid rgba(108,138,255,.10)}
-.quest.done{border-color:rgba(50,245,156,.24)}
-.quest .meta,.skill .meta,.pet .meta{margin-top:6px;color:var(--muted);font-size:12px}
-.row2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:rgba(180,76,255,.13);border:1px solid rgba(180,76,255,.20);font-size:11px;font-weight:700}
-.toastWrap{position:fixed;right:14px;top:14px;z-index:50;display:grid;gap:10px;max-width:min(360px,calc(100vw - 28px))}
-.toast{padding:12px 14px;border-radius:14px;background:rgba(8,12,26,.96);border:1px solid rgba(65,243,255,.18)}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.46);display:none;place-items:center;z-index:60;padding:18px}
+.chapter p{margin:8px 0 0;color:var(--muted);font-size:12px}
+.btn{padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:800}
+.btn.good{background:linear-gradient(90deg, rgba(48,245,154,.9), rgba(20,120,80,.9));color:#021408}
+.btn.neon{background:linear-gradient(90deg,var(--blue),var(--purple));color:white}
+.btn.secondary{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.03);color:var(--muted)}
+.timer{font-weight:900;font-size:48px;text-align:center;color:var(--cyan);text-shadow:0 8px 40px rgba(69,243,255,.05)}
+.timer-small{color:var(--muted);font-size:13px;text-align:center}
+.quest-list,.ach-grid,.pet-grid,.skill-grid,.leader-grid,.shop-grid{display:grid;gap:10px}
+.quest{padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(9,12,26,.6), rgba(6,8,16,.6));border:1px solid rgba(69,243,255,.04)}
+.quest.done{border-color:rgba(48,245,154,.12);box-shadow:0 6px 20px rgba(48,245,154,.03)}
+.small{font-size:12px;color:var(--muted)}
+.toast-wrap{position:fixed;right:18px;top:18px;z-index:40;display:grid;gap:8px}
+.toast{background:linear-gradient(180deg, rgba(8,12,26,.98), rgba(6,8,18,.98));padding:10px 12px;border-radius:10px;border:1px solid rgba(69,243,255,.08);box-shadow:0 10px 40px rgba(69,243,255,.03);font-weight:700}
+.modal{position:fixed;inset:0;display:none;place-items:center;background:linear-gradient(180deg, rgba(0,0,0,.5), rgba(0,0,0,.6));z-index:60}
 .modal.show{display:grid}
-.modalBox{width:min(540px,100%);padding:18px;border-radius:22px;background:linear-gradient(180deg,rgba(10,16,38,.98),rgba(6,9,20,.98));border:1px solid rgba(65,243,255,.22)}
-.footer{margin:16px 0 8px;color:var(--muted);font-size:12px;text-align:center}
-.locked{opacity:.58;filter:saturate(.7)}
-.burst{position:fixed;pointer-events:none;z-index:45;border-radius:999px;background:radial-gradient(circle, rgba(65,243,255,.85), rgba(180,76,255,.20) 50%, transparent 72%);width:8px;height:8px}
-.worldTitle{margin:0 0 10px;font-size:16px;text-transform:uppercase;letter-spacing:1px;color:#fff}
-@media (max-width:1100px){.hero{grid-template-columns:1fr}.topStats{grid-template-columns:repeat(2,1fr)}.chapterGrid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
-@media (max-width:720px){.app{padding:10px}.topStats,.row2{grid-template-columns:1fr}.headerTitle{font-size:28px}.bigLevel{font-size:48px}.timer{font-size:52px}}
+.modal-box{width:min(520px,94%);background:linear-gradient(180deg,#071029,#041026);padding:18px;border-radius:14px;border:1px solid rgba(69,243,255,.06)}
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+.particle{position:absolute;border-radius:50%;filter:blur(1px);opacity:.18}
+.footer{margin-top:16px;text-align:center;color:var(--muted);font-size:12px}
+@media (max-width:1000px){.chapter-grid{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+@media (max-width:600px){.chapter-grid{grid-template-columns:1fr}.level-num{font-size:40px}.timer{font-size:34px}}
 </style>
 </head>
 <body>
-<div id="bgParticles"></div>
-<div class="toastWrap" id="toastWrap"></div>
-<div class="modal" id="modal"><div class="modalBox"><h3 id="modalTitle">Notice</h3><p id="modalText"></p><div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn good" id="modalOk">Okay</button></div></div></div>
+<div class="particles" id="particles"></div>
+<div class="toast-wrap" id="toasts"></div>
 
 <div class="app">
-  <div class="hero">
-    <div class="panel">
-      <div class="headerTitle">Hyper Study Runner V7.4</div>
-      <div class="headerSub">This version fixes persistence properly. Your progress is saved in localStorage and restored when you reopen the site.</div>
-      <div class="topStats">
-        <div class="stat"><div class="label">Current Level</div><div class="value" id="levelText">1</div></div>
-        <div class="stat"><div class="label">Total XP</div><div class="value" id="xpText">0</div></div>
-        <div class="stat"><div class="label">Coins</div><div class="value" id="coinText">0</div></div>
-        <div class="stat"><div class="label">Rank Title</div><div class="value" id="rankText">Rookie</div></div>
-      </div>
-      <div style="margin-top:16px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="small">XP Progress</span><span class="small" id="xpNeedText">0 / 1000</span></div>
-        <div class="progress"><span id="xpBar"></span></div>
-      </div>
+  <div class="header">
+    <div class="logo">HYPER RUNNER V6</div>
+    <div>
+      <div class="title">Hyper Study Runner V6 – Exam Domination Update</div>
+      <div class="small subtitle">Cyberpunk study simulator — neon UI, progress, quests, pets, skills, and leaderboard.</div>
     </div>
-    <div class="panel levelOrb">
-      <div class="orb"><div><div class="bigLevel" id="bigLevel">1</div><div class="bigRank" id="bigRank">Rookie</div></div></div>
-      <div class="btnRow" style="justify-content:center;margin-top:12px">
-        <button class="btn secondary" id="themeBtn">Theme</button>
-        <button class="btn secondary" id="exportBtn">Export Save</button>
-        <button class="btn secondary" id="importBtn">Import Save</button>
-        <button class="btn warn" id="prestigeBtn">Prestige</button>
-        <input id="importFile" type="file" accept="application/json" style="display:none">
-      </div>
-    </div>
+    <div class="subtitle">Offline. Single-file. Persistent.</div>
   </div>
 
   <div class="grid">
-    <div class="panel section" style="grid-column:span 12">
-      <div class="sectionHead"><div><h2>Syllabus Chapters</h2><div class="small">Click a stage card or button to mark it complete.</div></div><span class="pill" id="chapterStatus">0 / 17 mastered</span></div>
-      <div id="worldList"></div>
-    </div>
-
-    <div class="panel section" style="grid-column:span 5">
-      <div class="sectionHead"><div><h2>Focus Lockdown</h2><div class="small">25-minute timer that really runs</div></div><span class="pill" id="focusState">Ready</span></div>
-      <div class="timerWrap">
-        <div class="timer" id="timerText">25:00</div>
-        <div class="btnRow" style="justify-content:center;margin-top:14px">
-          <button class="btn good" id="startTimerBtn">Start</button>
-          <button class="btn secondary" id="pauseTimerBtn">Pause</button>
-          <button class="btn secondary" id="resumeTimerBtn">Resume</button>
-          <button class="btn danger" id="resetTimerBtn">Reset</button>
+    <div class="panel left">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
+        <div class="level-badge">
+          <div class="level-num" id="bigLevel">1</div>
+          <div class="small" id="bigRank">Rookie</div>
+        </div>
+        <div style="flex:1">
+          <div style="display:flex;gap:10px;margin-bottom:10px">
+            <div class="stat"><div class="label">Level</div><div class="value" id="levelText">1</div></div>
+            <div class="stat"><div class="label">Total XP</div><div class="value" id="xpText">0</div></div>
+            <div class="stat"><div class="label">Coins</div><div class="value" id="coinText">0</div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div class="small">XP Progress</div>
+            <div class="small" id="xpNeedText">0 / 1000</div>
+          </div>
+          <div class="progress"><span id="xpBar"></span></div>
         </div>
       </div>
-      <div class="row2"><div class="stat"><div class="label">Study Sessions</div><div class="value" id="sessionText">0</div></div><div class="stat"><div class="label">Hours Studied</div><div class="value" id="hoursText">0.0</div></div></div>
+
+      <div style="margin-top:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="small">Syllabus Chapters</div>
+          <div class="pill" id="chapterStatus">0 / 17</div>
+        </div>
+        <div class="chapter-grid" id="chapterGrid"></div>
+      </div>
     </div>
 
-    <div class="panel section" style="grid-column:span 7">
-      <div class="sectionHead"><div><h2>Daily Quests</h2><div class="small">Three quests refresh daily with progress bars</div></div><span class="pill" id="questDateText">Today</span></div>
-      <div class="quests" id="questList"></div>
+    <div class="panel right">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Focus Lockdown</strong><div class="small">25-minute Pomodoro sessions</div></div>
+        <div class="pill" id="focusState">Ready</div>
+      </div>
+
+      <div style="text-align:center">
+        <div class="timer" id="timerText">25:00</div>
+        <div class="timer-small" id="timerSub">Large animated countdown</div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+          <button class="btn good" onclick="startTimer()">Start</button>
+          <button class="btn secondary" onclick="pauseTimer()">Pause</button>
+          <button class="btn secondary" onclick="resumeTimer()">Resume</button>
+          <button class="btn" style="background:linear-gradient(90deg,#ff5d8f,#b14cff)" onclick="resetTimer()">Reset</button>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <div style="display:flex;gap:8px">
+          <div class="stat"><div class="label">Sessions</div><div class="value" id="sessionText">0</div></div>
+          <div class="stat"><div class="label">Hours</div><div class="value" id="hoursText">0.0</div></div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div><strong>Daily Quests</strong><div class="small">Auto-refresh each day</div></div>
+            <div class="pill" id="questDateText">Today</div>
+          </div>
+          <div class="quest-list" id="questList"></div>
+        </div>
+      </div>
     </div>
 
-    <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Streak & Exam</h2><div class="small">Track streaks and set your exam date</div></div><span class="pill" id="examSetText">Not set</span></div>
-      <div class="row2"><div class="stat"><div class="label">Current Streak</div><div class="value" id="streakText">0</div></div><div class="stat"><div class="label">Best Streak</div><div class="value" id="bestStreakText">0</div></div></div>
-      <div style="height:12px"></div>
-      <div style="display:grid;grid-template-columns:1fr auto;gap:8px"><input type="date" id="examDateInput"><button class="btn good" id="saveExamBtn">Save</button></div>
-      <div class="row2" style="margin-top:12px"><div class="stat"><div class="label">Days</div><div class="value" id="daysLeft">0</div></div><div class="stat"><div class="label">Time Left</div><div class="value" id="timeLeft">00:00:00</div></div></div>
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Real Streak</strong><div class="small">Track consecutive study days</div></div>
+        <div class="pill">Persistent</div>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:8px">
+        <div class="stat"><div class="label">Current Streak</div><div class="value" id="streakText">0</div></div>
+        <div class="stat"><div class="label">Best Streak</div><div class="value" id="bestStreakText">0</div></div>
+      </div>
+
+      <div style="margin-top:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div><strong>Exam Countdown</strong><div class="small">Set your exam date</div></div>
+          <div class="pill" id="examSetText">Not set</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input id="examDateInput" type="date" style="flex:1;padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,.04);color:var(--text)">
+          <button class="btn neon" onclick="saveExamDate()">Save</button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="stat"><div class="label">Days</div><div class="value" id="daysLeft">0</div></div>
+          <div class="stat"><div class="label">Time Left</div><div class="value" id="timeLeft">00:00:00</div></div>
+        </div>
+      </div>
     </div>
 
-    <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Achievements</h2><div class="small">Unlock automatically</div></div><span class="pill" id="achCount">0 unlocked</span></div>
-      <div class="achievements" id="achGrid"></div>
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Achievements</strong><div class="small">Locked / Unlocked</div></div>
+        <div class="pill" id="achCount">0 unlocked</div>
+      </div>
+      <div class="ach-grid" id="achGrid"></div>
     </div>
 
-    <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Study Pets</h2><div class="small">Unlock at level milestones</div></div><span class="pill">Bonuses</span></div>
-      <div class="pets" id="petGrid"></div>
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Study Pets</strong><div class="small">Unlock via level</div></div>
+        <div class="pill">Bonuses</div>
+      </div>
+      <div class="pet-grid" id="petGrid"></div>
     </div>
 
-    <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Skill Tree</h2><div class="small">Nodes unlock at set levels</div></div><span class="pill">Nodes</span></div>
-      <div class="skills" id="skillGrid"></div>
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Skill Tree</strong><div class="small">Unlock skills by level</div></div>
+        <div class="pill">Visual</div>
+      </div>
+      <div class="skill-grid" id="skillGrid"></div>
     </div>
 
-    <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Leaderboard</h2><div class="small">Add and compare players</div></div><span class="pill">Top 10</span></div>
-      <div style="display:grid;grid-template-columns:1fr auto;gap:8px"><input id="playerName" placeholder="Enter player name"><button class="btn good" id="addPlayerBtn">Add</button></div>
-      <div style="height:12px"></div>
-      <div class="leaders" id="leaderGrid"></div>
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Analytics Dashboard</strong><div class="small">Live study metrics</div></div>
+        <div class="pill">Insights</div>
+      </div>
+      <div style="display:flex;gap:12px">
+        <div class="stat"><div class="label">Chapters</div><div class="value" id="chaptersDoneText">0</div></div>
+        <div class="stat"><div class="label">Completion</div><div class="value" id="completionText">0%</div></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div class="stat"><div class="label">Avg XP / Day</div><div class="value" id="avgXpText">0</div></div>
+        <div class="stat"><div class="label">Total Sessions</div><div class="value" id="sessionsAllText">0</div></div>
+      </div>
     </div>
 
-    <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Coin Shop</h2><div class="small">Spend coins on boosts</div></div><span class="pill" id="shopCoins">0 coins</span></div>
-      <div class="shop" id="shopGrid"></div>
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Duel Leaderboard</strong><div class="small">Add competitors</div></div>
+        <div class="pill">Rank</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <input id="playerName" placeholder="Player name" style="flex:1;padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,.04);color:var(--text)">
+        <button class="btn neon" onclick="addPlayer()">Add</button>
+      </div>
+      <div class="leader-grid" id="leaderGrid"></div>
     </div>
+
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Coin Shop</strong><div class="small">Spend coins to upgrade</div></div>
+        <div class="pill" id="shopCoins">0 coins</div>
+      </div>
+      <div class="shop-grid" id="shopGrid"></div>
+    </div>
+
+    <div class="panel" style="grid-column:span 12">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Sound System</strong><div class="small">Play ambient tracks (structural)</div></div>
+        <div class="pill">Audio</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+        <div style="padding:10px;border-radius:10px;background:linear-gradient(180deg,#041022,#021019)"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Lofi</strong><span class="small" id="soundLofiState">Idle</span></div><div style="margin-top:8px"><button class="btn neon" onclick="toggleSound('lofi')">Play/Pause</button> <button class="btn secondary" onclick="stopSound('lofi')">Stop</button></div></div>
+        <div style="padding:10px;border-radius:10px;background:linear-gradient(180deg,#041022,#021019)"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Rain</strong><span class="small" id="soundRainState">Idle</span></div><div style="margin-top:8px"><button class="btn neon" onclick="toggleSound('rain')">Play/Pause</button> <button class="btn secondary" onclick="stopSound('rain')">Stop</button></div></div>
+        <div style="padding:10px;border-radius:10px;background:linear-gradient(180deg,#041022,#021019)"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Library</strong><span class="small" id="soundLibraryState">Idle</span></div><div style="margin-top:8px"><button class="btn neon" onclick="toggleSound('library')">Play/Pause</button> <button class="btn secondary" onclick="stopSound('library')">Stop</button></div></div>
+        <div style="padding:10px;border-radius:10px;background:linear-gradient(180deg,#041022,#021019)"><div style="display:flex;justify-content:space-between;align-items:center"><strong>White Noise</strong><span class="small" id="soundWhiteState">Idle</span></div><div style="margin-top:8px"><button class="btn neon" onclick="toggleSound('white')">Play/Pause</button> <button class="btn secondary" onclick="stopSound('white')">Stop</button></div></div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="footer">V7.4 restores your saved progress automatically when the page opens.</div>
+  <div class="footer">Gamification ranks: Level 1 = Rookie, 5 = Scholar, 10 = Memory Beast, 20 = Focus Machine, 50 = Exam Destroyer, 100 = Exam Titan</div>
 </div>
 
+<div class="modal" id="modal"><div class="modal-box"><h3 id="modalTitle">Notice</h3><p id="modalText" class="small"></p><div style="text-align:right;margin-top:12px"><button class="btn good" onclick="closeModal()">OK</button></div></div></div>
+
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const STORAGE_KEY = 'hyper_study_runner_v7_4_state';
-  const stages = [
-    {world:'World 1: Language & Lore', stage:1, title:'English Literature — I Wandered Lonely as a Cloud', desc:'Poem analysis, figures of speech, themes', reward:120},
-    {world:'World 1: Language & Lore', stage:2, title:'English Literature — Grandfather and the Python', desc:'Plot progression, character sketches', reward:120},
-    {world:'World 1: Language & Lore', stage:3, title:'English Language — Essay, Notice Writing, and Whole Copy Structural Revision', desc:'Writing formats, structure, and revision practice', reward:130},
-    {world:'World 1: Language & Lore', stage:4, title:'Hindi — Matrabhumi', desc:'Core text analysis and stanza meanings', reward:120},
-    {world:'World 1: Language & Lore', stage:5, title:'Hindi — Bus Ki Yatra + Complete Grammar Notebook Review', desc:'Story review and grammar notebook revision', reward:130},
-    {world:'World 2: Logic & Digital Architecture', stage:6, title:'Mathematics — Rational Numbers', desc:'Properties, operations, and number lines', reward:140},
-    {world:'World 2: Logic & Digital Architecture', stage:7, title:'Mathematics — Exponents', desc:'Laws of exponents and scientific notation conversions', reward:150},
-    {world:'World 2: Logic & Digital Architecture', stage:8, title:'Computer Science — Fundamentals of Java', desc:'Syntax, variables, data types, basic logic', reward:160},
-    {world:'World 2: Logic & Digital Architecture', stage:9, title:'Computer Science — Spreadsheet', desc:'Formulas, functions, cell referencing, and data sorting', reward:150},
-    {world:'World 3: The Natural Sciences', stage:10, title:'Physics — Physical Quantities and Measurement', desc:'Units, density calculations, instruments', reward:150},
-    {world:'World 3: The Natural Sciences', stage:11, title:'Chemistry — Matter', desc:'States of matter, kinetic theory, phase changes', reward:150},
-    {world:'World 3: The Natural Sciences', stage:12, title:'Chemistry — Elements, Mixtures, and Compounds', desc:'Chemical formulas, separation techniques', reward:160},
-    {world:'World 3: The Natural Sciences', stage:13, title:'Biology — Human Body: The Circulatory System', desc:'Heart anatomy, blood vessels, double circulation', reward:160},
-    {world:'World 4: Civilization, Systems & Power', stage:14, title:'Geography — Urbanisation', desc:'Causes, impacts of rapid urban growth, smart city concepts', reward:140},
-    {world:'World 4: Civilization, Systems & Power', stage:15, title:'Geography — Migration', desc:'Push and pull factors, economic and social consequences', reward:140},
-    {world:'World 4: Civilization, Systems & Power', stage:16, title:'History & Civics — The Union Legislature', desc:'Lok Sabha, Rajya Sabha, law-making structures', reward:150},
-    {world:'World 4: Civilization, Systems & Power', stage:17, title:'History & Civics — Growth of British Power in Bengal', desc:'Battle of Plassey, Battle of Buxar', reward:170}
-  ];
-  const skillDefs = [
-    {name:'Quick Learner', req:2, desc:'+5% XP gain'},
-    {name:'Memory Beast', req:5, desc:'+10% quest rewards'},
-    {name:'Focus Machine', req:10, desc:'+1 session coin reward'},
-    {name:'Revision Master', req:20, desc:'Chapters give bonus XP'},
-    {name:'Exam Destroyer', req:50, desc:'Prestige unlock prep'},
-    {name:'Neon Sage', req:75, desc:'Visual mastery node'},
-    {name:'Titan Mode', req:100, desc:'Prestige ready'}
-  ];
-  const petDefs = [
-    {key:'brainbot', name:'Brain Bot', req:3, bonus:'+5% XP'},
-    {key:'dragon', name:'Study Dragon', req:10, bonus:'+10% XP'},
-    {key:'owl', name:'Quantum Owl', req:20, bonus:'+5% quests'},
-    {key:'titan', name:'Exam Titan', req:50, bonus:'Huge rewards'}
-  ];
-  const shopDefs = [
-    {label:'XP Booster',cost:120,desc:'+500 XP',act:()=>addXp(500,true)},
-    {label:'Focus Booster',cost:150,desc:'+1 session',act:()=>awardSession(true)},
-    {label:'Pet Food',cost:100,desc:'Unlock next pet',act:unlockNextPet},
-    {label:'Revision Scroll',cost:180,desc:'Complete 1 random stage',act:completeRandomStage}
-  ];
-  const defaultState = () => ({
-    xp:0, coins:0, stages:Array(stages.length).fill(false), sessions:0, hoursStudied:0,
-    streak:0, bestStreak:0, lastStudyDate:'', achievements:{}, quests:[], questDate:'',
-    pets:{brainbot:false,dragon:false,owl:false,titan:false}, skills:{},
-    leaderboard:[{name:'You',xp:0}], examDate:'', settings:{theme:'neon'}, prestige:0, prestigeTokens:0
-  });
-
-  function loadState(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) return defaultState();
-      const parsed = JSON.parse(raw);
-      return Object.assign(defaultState(), parsed, {
-        stages: Array.isArray(parsed.stages) ? parsed.stages.slice(0, stages.length).concat(Array(Math.max(0, stages.length - parsed.stages.length)).fill(false)) : Array(stages.length).fill(false),
-        pets: Object.assign(defaultState().pets, parsed.pets || {}),
-        skills: Object.assign(defaultState().skills, parsed.skills || {}),
-        settings: Object.assign(defaultState().settings, parsed.settings || {}),
-        leaderboard: Array.isArray(parsed.leaderboard) ? parsed.leaderboard : [{name:'You',xp:0}],
-        quests: Array.isArray(parsed.quests) ? parsed.quests : []
-      });
-    }catch(e){
-      return defaultState();
-    }
-  }
-
-  let state = loadState();
-  let timerSec = 1500, timer = null, running = false, paused = false;
-  const $ = id => document.getElementById(id);
-
-  function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-  function toast(msg){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; $('toastWrap').appendChild(d); setTimeout(()=>d.remove(),3200); }
-  function burst(){ for(let i=0;i<8;i++){ const b=document.createElement('div'); b.className='burst'; const x=Math.random()*window.innerWidth,y=Math.random()*window.innerHeight,s=8+Math.random()*16; b.style.left=x+'px'; b.style.top=y+'px'; b.style.width=b.style.height=s+'px'; document.body.appendChild(b); setTimeout(()=>b.remove(),650); } }
-  function modal(t,m){ $('modalTitle').textContent=t; $('modalText').textContent=m; $('modal').classList.add('show'); }
-  function closeModal(){ $('modal').classList.remove('show'); }
-  function level(){ return Math.floor(state.xp/1000)+1; }
-  function currentXp(){ return state.xp % 1000; }
-  function rank(){ return level()>=100?'Exam Titan':level()>=50?'Exam Destroyer':level()>=20?'Focus Machine':level()>=10?'Memory Beast':level()>=5?'Scholar':'Rookie'; }
-  function countStages(){ return state.stages.filter(Boolean).length; }
-  function petMult(){ let m=1; if(state.pets.brainbot) m*=1.05; if(state.pets.dragon) m*=1.10; if(state.pets.owl) m*=1.05; return m; }
-  function skillQuick(){ return !!state.skills.quick; }
-  function skillRevision(){ return !!state.skills.revision; }
-
-  function updateStreak(){
-    const today=new Date().toISOString().slice(0,10);
-    if(!state.lastStudyDate){ state.streak=1; state.bestStreak=1; state.lastStudyDate=today; return; }
-    const diff=Math.round((new Date(today+'T00:00:00')-new Date(state.lastStudyDate+'T00:00:00'))/86400000);
-    if(diff===0) return;
-    state.streak = diff===1 ? state.streak+1 : 1;
-    state.bestStreak = Math.max(state.bestStreak, state.streak);
-    state.lastStudyDate = today;
-  }
-
-  function addXp(v, silent=false){
-    const bonus = 1 + state.prestige*0.02 + (skillQuick() ? 0.05 : 0);
-    const gained = Math.round(v * petMult() * bonus);
-    const before = level();
-    state.xp += gained;
-    if(level()>before){ toast(`Level Up! ${level()}`); modal('Level Up', `You reached level ${level()}.`); burst(); }
-    if(!silent) toast(`+${gained} XP`);
-    save(); render();
-  }
-  function addCoins(v){ state.coins += v; save(); render(); }
-
-  function buildQuests(){
-    const today=new Date().toISOString().slice(0,10);
-    if(state.questDate===today && state.quests.length) return;
-    state.questDate=today;
-    const r=Math.random();
-    const mult=r<.55?1:r<.82?2:r<.95?3:4;
-    state.quests=[
-      {id:'q1',name:'Complete 2 stages',type:'stage',target:2,progress:0,done:false,rewardXp:180+50*mult,rewardCoins:35+10*mult},
-      {id:'q2',name:'Finish 2 focus sessions',type:'session',target:2,progress:0,done:false,rewardXp:220+50*mult,rewardCoins:45+10*mult},
-      {id:'q3',name:'Earn 500 XP today',type:'xp',target:500,progress:0,done:false,rewardXp:200+50*mult,rewardCoins:50+10*mult}
-    ];
-  }
-  function progressQuest(type, amount=1){
-    buildQuests();
-    state.quests.forEach(q=>{
-      if(q.done) return;
-      if(q.type===type) q.progress=Math.min(q.target, q.progress+amount);
-      if(q.type==='xp') q.progress=Math.min(q.target, state.xp % 1000);
-    });
-    checkQuests();
-  }
-  function rewardQuest(q){
-    if(q.done) return;
-    q.done=true;
-    addXp(q.rewardXp, true);
-    addCoins(q.rewardCoins);
-    toast(`Quest completed: ${q.name}`);
-    burst();
-  }
-  function checkQuests(){
-    buildQuests();
-    state.quests.forEach(q=>{
-      if(q.done) return;
-      if(q.type==='stage' && q.progress>=q.target) rewardQuest(q);
-      if(q.type==='session' && q.progress>=q.target) rewardQuest(q);
-      if(q.type==='xp' && state.xp>=q.target) rewardQuest(q);
-    });
-    save();
-  }
-
-  function checkAchievements(){
-    const unlock=(name,cond,reward)=>{
-      if(cond && !state.achievements[name]){
-        state.achievements[name]=true;
-        addXp(reward,true);
-        addCoins(40);
-        toast(`Achievement unlocked: ${name}`);
-        modal('Achievement Unlocked', name);
-        burst();
-      }
-    };
-    unlock('First Blood', countStages()>=1, 50);
-    unlock('Scholar', level()>=5, 100);
-    unlock('Beast Mode', countStages()>=5, 150);
-    unlock('Focus Machine', state.sessions>=5, 150);
-    unlock('Midterm Destroyer', state.xp>=5000, 200);
-    unlock('Study Addict', state.streak>=7, 200);
-    unlock('Exam Titan', level()>=100, 500);
-    state.skills.quick = level()>=2;
-    state.skills.memory = level()>=5;
-    state.skills.focus = level()>=10;
-    state.skills.revision = level()>=20;
-  }
-
-  function completeStage(i){
-    if(state.stages[i]) return toast('Already completed.');
-    state.stages[i]=true;
-    updateStreak();
-    addXp(stages[i].reward);
-    addCoins(20);
-    progressQuest('stage');
-    checkAchievements();
-    save();
-    render();
-    toast(`Completed: Stage ${stages[i].stage}`);
-    burst();
-  }
-  function completeRandomStage(){ const i=state.stages.findIndex(v=>!v); if(i<0) return toast('All stages already completed.'); completeStage(i); }
-  function awardSession(shop=false){
-    state.sessions++;
-    state.hoursStudied += 25/60;
-    updateStreak();
-    addXp(95);
-    if(!shop) addCoins(10 + (state.skills.focus ? 1 : 0));
-    progressQuest('session');
-    checkAchievements();
-    save(); render(); toast('Session complete!');
-  }
-  function unlockNextPet(){
-    const pet=petDefs.find(p=>!state.pets[p.key]);
-    if(!pet) return toast('All pets unlocked.');
-    if(level()<pet.req) return toast(`Requires level ${pet.req}`);
-    state.pets[pet.key]=true;
-    save(); render();
-    modal('Pet Unlocked', `${pet.name} is now active. ${pet.bonus}`);
-    toast(`${pet.name} unlocked!`);
-    burst();
-  }
-  function prestige(){
-    if(level()<100) return toast('Reach level 100 first.');
-    state.prestige++; state.prestigeTokens++;
-    state.xp=0; state.stages=Array(stages.length).fill(false); state.sessions=0; state.hoursStudied=0;
-    state.streak=0; state.bestStreak=0; state.lastStudyDate=''; state.quests=[]; state.questDate='';
-    save(); render(); modal('Prestige Complete', `Tokens: ${state.prestigeTokens}`); toast('Prestige complete!'); burst();
-  }
-
-  function startTimer(){
-    if(running) return;
-    running=true; paused=false; $('focusState').textContent='Running';
-    timer=setInterval(()=>{ timerSec--; renderTimer(); if(timerSec<=0){ clearInterval(timer); running=false; paused=false; timerSec=1500; renderTimer(); awardSession(); modal('Focus Reward','Your 25-minute session finished. Rewards granted.'); burst(); } },1000);
-  }
-  function pauseTimer(){ if(!running) return; clearInterval(timer); running=false; paused=true; $('focusState').textContent='Paused'; }
-  function resumeTimer(){ if(!paused) return; startTimer(); }
-  function resetTimer(){ clearInterval(timer); timerSec=1500; running=false; paused=false; $('focusState').textContent='Ready'; renderTimer(); }
-  function renderTimer(){ $('timerText').textContent=`${String(Math.floor(timerSec/60)).padStart(2,'0')}:${String(timerSec%60).padStart(2,'0')}`; }
-
-  function saveExamDate(){ state.examDate=$('examDateInput').value; save(); render(); toast('Exam date saved.'); }
-  function tickExam(){
-    if(!state.examDate){ $('daysLeft').textContent='0'; $('timeLeft').textContent='00:00:00'; $('examSetText').textContent='Not set'; return; }
-    const t=new Date(state.examDate+'T00:00:00').getTime()-Date.now(); const s=Math.max(0,Math.floor(t/1000));
-    $('daysLeft').textContent=Math.floor(s/86400);
-    $('timeLeft').textContent=`${String(Math.floor((s%86400)/3600)).padStart(2,'0')}:${String(Math.floor((s%3600)/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
-    $('examSetText').textContent='Exam Set';
-  }
-
-  function addPlayer(){
-    const n=($('playerName').value||'').trim(); if(!n) return toast('Enter a player name.');
-    const xp=Math.floor(Math.random()*8000)+Math.floor(state.xp*0.2);
-    state.leaderboard.push({name:n,xp}); state.leaderboard.sort((a,b)=>b.xp-a.xp); $('playerName').value=''; save(); render(); toast(`Added ${n}`);
-  }
-  function exportSave(){ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='hyper-study-runner-v7-save.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); toast('Save exported.'); }
-  function importSave(ev){ const f=ev.target.files&&ev.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=e=>{ try{ state=Object.assign(defaultState(), JSON.parse(e.target.result)); save(); render(); toast('Save imported.'); }catch(err){ toast('Invalid save file.'); } }; r.readAsText(f); }
-  function buyShop(i){ const item=shopDefs[i]; if(state.coins<item.cost) return toast('Not enough coins.'); state.coins-=item.cost; item.act(); save(); render(); toast(`${item.label} purchased.`); burst(); }
-
-  function renderWorlds(){
-    const grouped = stages.reduce((acc,s,idx)=>{ (acc[s.world]||(acc[s.world]=[])).push({...s, idx}); return acc; }, {});
-    return Object.entries(grouped).map(([world, list]) => `
-      <div style="margin-bottom:18px">
-        <h3 class="worldTitle">${world}</h3>
-        <div class="chapterGrid">
-          ${list.map(s=>`
-            <div class="chapter ${state.stages[s.idx] ? 'completed' : ''}" data-stage="${s.idx}">
-              <h3>Stage ${s.stage}: ${s.title}</h3>
-              <p>${s.desc}</p>
-              <div class="reward">Reward: +${s.reward} XP, +20 coins</div>
-              <div class="btnRow"><button class="btn ${state.stages[s.idx] ? 'secondary' : 'good'} stageBtn" data-index="${s.idx}">${state.stages[s.idx] ? 'COMPLETED' : 'COMPLETE STAGE'}</button></div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function render(){
-    buildQuests(); checkQuests(); checkAchievements();
-    $('levelText').textContent=level(); $('xpText').textContent=state.xp; $('coinText').textContent=state.coins; $('rankText').textContent=rank();
-    $('bigLevel').textContent=level(); $('bigRank').textContent=rank(); $('xpNeedText').textContent=`${currentXp()} / 1000`; $('xpBar').style.width=`${currentXp()/10}%`;
-    $('chapterStatus').textContent=`${countStages()} / ${stages.length} mastered`; $('sessionText').textContent=state.sessions; $('hoursText').textContent=state.hoursStudied.toFixed(1);
-    $('streakText').textContent=state.streak; $('bestStreakText').textContent=state.bestStreak; $('achCount').textContent=`${Object.values(state.achievements).filter(Boolean).length} unlocked`;
-    $('questDateText').textContent=state.questDate||'Today'; $('shopCoins').textContent=`${state.coins} coins`; $('examDateInput').value=state.examDate||''; $('focusState').textContent=running?'Running':paused?'Paused':'Ready';
-    $('worldList').innerHTML = renderWorlds();
-    $('questList').innerHTML = state.quests.map(q=>{ const p=q.type==='xp'?Math.min(state.xp,q.target):q.progress; return `<div class="quest ${q.done?'done':''}"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><strong>${q.name}</strong><span class="badge">+${q.rewardXp} XP / +${q.rewardCoins} Coins</span></div><div class="meta">Progress: ${p}/${q.target}</div><div class="progress" style="margin-top:8px"><span style="width:${Math.min(100,(p/q.target)*100)}%"></span></div></div>`; }).join('');
-    $('achGrid').innerHTML = [
-      ['First Blood','Complete 1 stage',50, countStages()>=1],
-      ['Scholar','Reach level 5',100, level()>=5],
-      ['Beast Mode','Complete 5 stages',150, countStages()>=5],
-      ['Focus Machine','Finish 5 sessions',150, state.sessions>=5],
-      ['Midterm Destroyer','Reach 5000 XP',200, state.xp>=5000],
-      ['Study Addict','Maintain 7-day streak',200, state.streak>=7],
-      ['Exam Titan','Reach level 100',500, level()>=100]
-    ].map(([n,d,r,ok])=>`<div class="achievement ${ok?'':'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${n}</strong><span class="badge">+${r} XP</span></div><div class="meta">${d}</div><div class="meta">${ok?'Unlocked':'Locked'}</div></div>`).join('');
-    $('petGrid').innerHTML = petDefs.map(p=>{ const ok=level()>=p.req; const active=state.pets[p.key]; return `<div class="pet ${ok?'':'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${p.name}</strong><span class="badge">Lv ${p.req}</span></div><div class="meta">${p.bonus}</div><div class="meta">${ok?'Unlocked':'Locked'}${active?' • Active':''}</div></div>`; }).join('');
-    $('skillGrid').innerHTML = skillDefs.map(s=>{ const ok=level()>=s.req; return `<div class="skill ${ok?'':'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${s.name}</strong><span class="badge">Lv ${s.req}</span></div><div class="meta">${s.desc}</div><div class="meta">${ok?'Unlocked':'Locked'}</div></div>`; }).join('');
-    $('leaderGrid').innerHTML = state.leaderboard.slice(0,10).map((p,i)=>`<div class="leader"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>#${i+1} ${p.name}</strong><span class="badge">Lv ${Math.floor(p.xp/1000)+1}</span></div><div class="meta">XP: ${p.xp}</div></div>`).join('');
-    $('shopGrid').innerHTML = shopDefs.map((s,i)=>`<div class="shopItem"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${s.label}</strong><span class="badge">${s.cost} coins</span></div><div class="meta">${s.desc}</div><div class="btnRow"><button class="btn warn shopBtn" data-shop="${i}">Buy</button></div></div>`).join('');
-    tickExam(); save();
-  }
-
-  function initParticles(){
-    const root=$('bgParticles');
-    for(let i=0;i<44;i++){ const p=document.createElement('div'); p.className='particle'; const s=3+Math.random()*8; p.style.width=p.style.height=s+'px'; p.style.left=Math.random()*100+'%'; p.style.top=Math.random()*100+'%'; p.dataset.x=(Math.random()*2-1); p.dataset.y=(0.2+Math.random()*0.9); root.appendChild(p); }
-    setInterval(()=>{ root.querySelectorAll('.particle').forEach(p=>{ let x=parseFloat(p.style.left), y=parseFloat(p.style.top); x+=parseFloat(p.dataset.x)*0.04; y-=parseFloat(p.dataset.y)*0.04; if(y<-5){y=105;x=Math.random()*100} if(x>105)x=-5; if(x<-5)x=105; p.style.left=x+'%'; p.style.top=y+'%'; }); },40);
-  }
-
-  $('modalOk').addEventListener('click', closeModal);
-  $('themeBtn').addEventListener('click', ()=>{ state.settings.theme=state.settings.theme==='neon'?'midnight':'neon'; document.documentElement.style.setProperty('--cyan', state.settings.theme==='midnight'?'#7afcff':'#41f3ff'); document.documentElement.style.setProperty('--purple', state.settings.theme==='midnight'?'#7a5cff':'#b44cff'); save(); render(); toast(`Theme: ${state.settings.theme}`); });
-  $('exportBtn').addEventListener('click', exportSave);
-  $('importBtn').addEventListener('click', ()=>$('importFile').click());
-  $('importFile').addEventListener('change', importSave);
-  $('prestigeBtn').addEventListener('click', prestige);
-  $('startTimerBtn').addEventListener('click', startTimer);
-  $('pauseTimerBtn').addEventListener('click', pauseTimer);
-  $('resumeTimerBtn').addEventListener('click', resumeTimer);
-  $('resetTimerBtn').addEventListener('click', resetTimer);
-  $('saveExamBtn').addEventListener('click', saveExamDate);
-  $('addPlayerBtn').addEventListener('click', addPlayer);
-
-  $('worldList').addEventListener('click', e => {
-    const b = e.target.closest('.stageBtn');
-    if(!b) return;
-    completeStage(Number(b.dataset.index));
-  });
-  $('shopGrid').addEventListener('click', e => {
-    const b = e.target.closest('.shopBtn');
-    if(!b) return;
-    buyShop(Number(b.dataset.shop));
-  });
-
-  window.addEventListener('focus', ()=>{ updateStreak(); buildQuests(); checkQuests(); render(); });
-  setInterval(()=>{ renderTimer(); tickExam(); save(); },1000);
-  setInterval(()=>{ updateStreak(); buildQuests(); checkQuests(); save(); },60000);
-
-  initParticles();
-  render();
-  renderTimer();
+/* ========= Persistent State & Defaults ========= */
+const STORAGE_KEY = 'hyper_study_runner_v6_state_v1';
+const defaultState = () => ({
+  xp:0, coins:0, chapters:Array(17).fill(false),
+  sessions:0, hoursStudied:0,
+  streak:0, bestStreak:0, lastStudyDate:'',
+  achievements:{}, quests:[], questDate:'',
+  pets:{brainbot:false,dragon:false,owl:false,titan:false},
+  skills:{quick:false,memory:false,focus:false,revision:false,destroyer:false},
+  leaderboard:[{name:'You',xp:0,level:1}], examDate:'', sounds:{lofi:false,rain:false,library:false,white:false}
 });
-</script>
-</body>
-</html>
+let state = loadState();
+
+/* ========= Static Data ========= */
+const chapters = [
+ 'Algebra Core','Geometry Grid','Trigonometry Pulse','Calculus Boost','Statistics Signal','Physics Motion','Chemistry Bonds','Biology Systems','English Grammar','Essay Power','Computer Basics','Programming Logic','History Timeline','Geography Atlas','Economics Flow','General Knowledge','Revision Final Boss'
+];
+
+const achievementsDef = [
+  ['First Blood','Complete 1 chapter',()=>countChapters()>=1,50],
+  ['Scholar','Reach level 5',()=>level()>=5,100],
+  ['Beast Mode','Complete 5 chapters',()=>countChapters()>=5,150],
+  ['Focus Machine','Finish 5 focus sessions',()=>state.sessions>=5,150],
+  ['Midterm Destroyer','Reach 5000 XP',()=>state.xp>=5000,200],
+  ['Study Addict','Maintain 7-day streak',()=>state.streak>=7,200],
+  ['Exam Titan','Reach level 100',()=>level()>=100,500]
+];
+
+const petsDef = [
+  ['Brain Bot',3,'XP x1.05'],
+  ['Study Dragon',10,'XP x1.10'],
+  ['Quantum Owl',20,'Focus Bonus'],
+  ['Exam Titan',50,'High Reward']
+];
+
+const skillsDef = [
+  ['Quick Learner',2],['Memory Beast',5],['Focus Machine',10],['Revision Master',20],['Exam Destroyer',50]
+];
+
+const shopDef = [
+  {id:'xp_booster',cost:120,label:'XP Booster',desc:'Add 500 XP',action:()=>addXp(500,true)},
+  {id:'focus_booster',cost:150,label:'Focus Booster',desc:'Grant 1 session',action:()=>awardSession(true)},
+  {id:'pet_food',cost:100,label:'Pet Food',desc:'Unlock next pet',action:unlockNextPet},
+  {id:'revision_scroll',cost:180,label:'Revision Scroll',desc:'Complete a random chapter',action:completeRandomChapter}
+];
+
+const rankTitles = [
+  ['Exam Titan',100],['Exam Destroyer',50],['Focus Machine',20],['Memory Beast',10],['Scholar',5],['Rookie',1]
+];
+
+/* ========= Storage Helpers ========= */
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultState();
+    const s = JSON.parse(raw);
+    return Object.assign(defaultState(), s);
+  }catch(e){console.error(e);return defaultState();}
+}
+function saveState(){localStorage.setItem(STORAGE_KEY, JSON.stringify(state));}
+
+/* ========= Basic Calculations ========= */
+function level(){ return Math.floor(state.xp/1000)+1; }
+function currentLevelXp(){ return state.xp % 1000; }
+function nextLevelXp(){ return (level()*1000); }
+function rank(){ for(const [name,req] of rankTitles) if(level()>=req) return name; return 'Rookie'; }
+function countChapters(){ return state.chapters.filter(Boolean).length; }
+
+/* ========= Notifications & Modal ========= */
+function toast(msg, time=4200){
+  const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(()=>t.remove(), time);
+}
+function showModal(title, text){ document.getElementById('modalTitle').textContent=title; document.getElementById('modalText').textContent=text; document.getElementById('modal').classList.add('show'); }
+function closeModal(){ document.getElementById('modal').classList.remove('show'); }
+
+/* ========= XP, Coins, Leaderboard ========= */
+function addXp(amount, silent=false){
+  const oldLevel = level();
+  const multiplier = petXpMultiplier();
+  const final = Math.round(amount * multiplier);
+  state.xp += final;
+  if(level() > oldLevel){
+    toast(`Level up! Reached Level ${level()}`, 5000);
+    showModal('Level Up', `You reached Level ${level()} — rank: ${rank()}`);
+  }
+  if(!silent) toast(`+${final} XP`);
+  updateLeaderboardFor('You', state.xp);
+  saveState(); render();
+}
+function addCoins(amount){ state.coins += amount; saveState(); render(); }
+function updateLeaderboardFor(name,xp){
+  const p = state.leaderboard.find(pl=>pl.name===name);
+  if(p){p.xp = xp; p.level = Math.floor(xp/1000)+1;}
+  else state.leaderboard.push({name:name,xp:xp,level:Math.floor(xp/1000)+1});
+  state.leaderboard.sort((a,b)=>b.xp-a.xp);
+  saveState();
+}
+
+/* ========= Chapters ========= */
+function masterChapter(i){
+  if(state.chapters[i]) return toast('Chapter already mastered.');
+  state.chapters[i] = true;
+  updateStreak();
+  addXp(140); addCoins(20);
+  toast(`Mastered: ${chapters[i]}`, 3200);
+  checkAchievements();
+  autoQuestProgress('chapter');
+  saveState(); render();
+}
+function completeRandomChapter(){
+  const idx = state.chapters.findIndex(v=>!v);
+  if(idx===-1) return toast('All chapters mastered.');
+  masterChapter(idx);
+}
+
+/* ========= Pomodoro Timer ========= */
+let timerSeconds = 25*60, timerInterval = null, timerRunning=false, timerPaused=false;
+function formatTime(s){ const m = Math.floor(s/60); const sec = s%60; return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`; }
+function updateTimerDisplay(){ document.getElementById('timerText').textContent = formatTime(timerSeconds); }
+function startTimer(){
+  if(timerRunning) return;
+  timerRunning = true; timerPaused = false; document.getElementById('focusState').textContent='Running';
+  timerInterval = setInterval(()=>{
+    timerSeconds--;
+    updateTimerDisplay();
+    if(timerSeconds<=0){
+      clearInterval(timerInterval); timerRunning=false; timerPaused=false; timerSeconds = 25*60; updateTimerDisplay();
+      awardSession(); toast('Pomodoro session complete — rewards granted!', 5000); showModal('Session Complete','You earned XP and coins for your focus session.');
+    }
+  },1000);
+}
+function pauseTimer(){ if(!timerRunning) return; clearInterval(timerInterval); timerRunning=false; timerPaused=true; document.getElementById('focusState').textContent='Paused'; }
+function resumeTimer(){ if(timerRunning || !timerPaused) return; startTimer(); }
+function resetTimer(){ clearInterval(timerInterval); timerRunning=false; timerPaused=false; timerSeconds = 25*60; updateTimerDisplay(); document.getElementById('focusState').textContent='Ready'; }
+
+/* ========= Session & Streak ========= */
+function awardSession(fromShop=false){
+  state.sessions += 1;
+  state.hoursStudied += 25/60;
+  updateStreak();
+  const xpGain = Math.round(90 * petXpMultiplier());
+  addXp(xpGain);
+  if(!fromShop) addCoins(10);
+  checkAchievements();
+  autoQuestProgress('session');
+  saveState(); render();
+}
+function updateStreak(){
+  const today = new Date().toISOString().slice(0,10);
+  if(!state.lastStudyDate){ state.streak = 1; state.bestStreak = Math.max(state.bestStreak,1); state.lastStudyDate = today; return; }
+  const last = new Date(state.lastStudyDate+'T00:00:00');
+  const diffDays = Math.round((new Date(today+'T00:00:00') - last)/86400000);
+  if(diffDays===0) return;
+  if(diffDays===1) state.streak += 1;
+  else state.streak = 1;
+  state.bestStreak = Math.max(state.bestStreak, state.streak);
+  state.lastStudyDate = today;
+}
+
+/* ========= Quests ========= */
+function questPool(){
+  return [
+    {id:'q_ch1',name:'Complete 1 chapter',type:'chapter',target:1,rewardXp:180,rewardCoins:35,progress:0,done:false},
+    {id:'q_sess2',name:'Complete 2 focus sessions',type:'session',target:2,rewardXp:220,rewardCoins:45,progress:0,done:false},
+    {id:'q_xp500',name:'Earn 500 XP',type:'xp',target:500,rewardXp:200,rewardCoins:50,progress:0,done:false}
+  ];
+}
+function buildQuests(){
+  const today = new Date().toISOString().slice(0,10);
+  if(state.questDate === today && state.quests.length) return;
+  state.questDate = today; state.quests = questPool();
+  saveState();
+}
+function autoQuestProgress(type){
+  buildQuests();
+  state.quests.forEach(q=>{
+    if(q.done) return;
+    if(q.type === 'xp'){
+      if(state.xp >= q.target){ q.done = true; rewardQuest(q); }
+    } else {
+      if(q.type === type) q.progress = Math.min(q.target, q.progress + 1);
+      if(q.progress >= q.target){ q.done = true; rewardQuest(q); }
+    }
+  });
+  saveState(); render();
+}
+function rewardQuest(q){
+  addXp(q.rewardXp, true); addCoins(q.rewardCoins);
+  toast(`Quest complete: ${q.name}`, 4200);
+}
+
+/* ========= Achievements ========= */
+function checkAchievements(){
+  achievementsDef.forEach(([name,desc,cond,reward])=>{
+    if(cond() && !state.achievements[name]){
+      state.achievements[name] = true;
+      addXp(reward, true); addCoins(40);
+      toast(`Achievement Unlocked: ${name}`, 4500);
+      showModal('Achievement Unlocked', `${name} — ${desc}`);
+    }
+  });
+}
+
+/* ========= Pets & Skills ========= */
+function petXpMultiplier(){
+  let m = 1;
+  if(state.pets.brainbot) m *= 1.05;
+  if(state.pets.dragon) m *= 1.10;
+  return m;
+}
+function unlockNextPet(){
+  const keys = ['brainbot','dragon','owl','titan'];
+  const idx = keys.findIndex(k=>!state.pets[k]);
+  if(idx === -1) return toast('All pets unlocked.');
+  const req = [idx]; [geeksforgeeks](https://www.geeksforgeeks.org/html/how-to-display-play-pause-and-mute-buttons-in-html5/)
+  if(level() < req) return toast(`Requires Level ${req} to unlock.`);
+  state.pets[keys[idx]] = true; saveState(); toast(`Unlocked: ${petsDef[idx][0]}`); showModal('Pet Unlocked', `${petsDef[idx][0]} provides: ${petsDef[idx] [rxdb](https://rxdb.info/articles/localstorage.html)}`);
+}
+
+/* ========= Leaderboard ========= */
+function addPlayer(){
+  const name = (document.getElementById('playerName').value||'').trim();
+  if(!name) return toast('Enter a player name.');
+  const xp = Math.floor(Math.random()*8000);
+  state.leaderboard.push({name, xp, level: Math.floor(xp/1000)+1});
+  state.leaderboard.sort((a,b)=>b.xp-a.xp);
+  document.getElementById('playerName').value='';
+  saveState(); render();
+}
+
+/* ========= Shop ========= */
+function buyShop(idx){
+  const item = shopDef[idx];
+  if(state.coins < item.cost) return toast('Not enough coins.');
+  state.coins -= item.cost;
+  item.action();
+  toast(`${item.label} purchased.`, 3000);
+  saveState(); render();
+}
+
+/* ========= Exam Countdown ========= */
+function saveExamDate(){
+  const d = document.getElementById('examDateInput').value;
+  state.examDate = d;
+  saveState(); render();
+  toast('Exam date saved.');
+}
+function tickExam(){
+  if(!state.examDate){ document.getElementById('daysLeft').textContent='0'; document.getElementById('timeLeft').textContent='00:00:00'; document.getElementById('examSetText').textContent='Not set'; return; }
+  const t = new Date(state.examDate+'T00:00:00').getTime() - Date.now();
+  const s = Math.max(0, Math.floor(t/1000));
+  const days = Math.floor(s/86400);
+  const hours = Math.floor((s%86400)/3600);
+  const minutes = Math.floor((s%3600)/60);
+  const seconds = s%60;
+  document.getElementById('daysLeft').textContent = days;
+  document.getElementById('timeLeft').textContent = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+  document.getElementById('examSetText').textContent = 'Exam Set';
+}
+
+/* ========= Sound System (structural) ========= */
+function toggleSound(name){
+  state.sounds[name] = !state.sounds[name];
+  saveState(); render(); toast(`${name} ${state.sounds[name]?'playing':'paused'}`);
+}
+function stopSound(name){
+  state.sounds[name] = false; saveState(); render(); toast(`${name} stopped`);
+}
+
+/* ========= Render UI ========= */
+function render(){
+  buildQuests(); checkAchievements();
+  document.getElementById('levelText').textContent = level();
+  document.getElementById('xpText').textContent = Math.floor(state.xp);
+  document.getElementById('coinText').textContent = Math.floor(state.coins);
+  document.getElementById('bigLevel').textContent = level();
+  document.getElementById('bigRank').textContent = rank();
+  const cur = currentLevelXp();
+  document.getElementById('xpNeedText').textContent = `${cur} / 1000`;
+  document.getElementById('xpBar').style.width = `${(cur/1000)*100}%`;
+  document.getElementById('chapterStatus').textContent = `${countChapters()} / ${chapters.length}`;
+  document.getElementById('sessionText').textContent = state.sessions;
+  document.getElementById('hoursText').textContent = state.hoursStudied.toFixed(1);
+  document.getElementById('streakText').textContent = state.streak;
+  document.getElementById('bestStreakText').textContent = state.bestStreak;
+  document.getElementById('chaptersDoneText').textContent = countChapters();
+  document.getElementById('completionText').textContent = `${Math.round(countChapters()/chapters.length*100)}%`;
+  document.getElementById('avgXpText').textContent = state.xp ? Math.round(state.xp / Math.max(1, daysSinceFirstStudy())) : 0;
+  document.getElementById('sessionsAllText').textContent = state.sessions;
+  document.getElementById('achCount').textContent = `${Object.values(state.achievements).filter(Boolean).length} unlocked`;
+  document.getElementById('shopCoins').textContent = `${state.coins} coins`;
+  document.getElementById('questDateText').textContent = state.questDate || 'Today';
+  document.getElementById('soundLofiState').textContent = state.sounds.lofi ? 'Playing' : 'Idle';
+  document.getElementById('soundRainState').textContent = state.sounds.rain ? 'Playing' : 'Idle';
+  document.getElementById('soundLibraryState').textContent = state.sounds.library ? 'Playing' : 'Idle';
+  document.getElementById('soundWhiteState').textContent = state.sounds.white ? 'Playing' : 'Idle';
+
+  // Quests
+  document.getElementById('questList').innerHTML = state.quests.map(q=>{
+    const progressText = q.type === 'xp' ? `${Math.min(state.xp,q.target)}/${q.target}` : `${q.progress}/${q.target}`;
+    return `<div class="quest ${q.done?'done':''}"><div style="display:flex;justify-content:space-between;align-items:center"><strong>${q.name}</strong><span class="small">+${q.rewardXp} XP • +${q.rewardCoins} coins</span></div><div class="small" style="margin-top:6px">${q.name} — progress: ${progressText}${q.done?' • Completed':''}</div></div>`;
+  }).join('');
+
+  // Chapters
+  document.getElementById('chapterGrid').innerHTML = chapters.map((c,i)=>`
+    <div class="chapter ${state.chapters[i] ? 'done' : ''}">
+      <h3>${String(i+1).padStart(2,'0')}. ${c}</h3>
+      <p>${state.chapters[i] ? 'Mastered — rewards claimed.' : 'Master this chapter to gain XP, coins, and progress.'}</p>
+      <div style="margin-top:8px"><button class="btn ${state.chapters[i] ? 'secondary' : 'good'}" onclick="masterChapter(${i})">${state.chapters[i]?'MASTERED':'MASTER CHAPTER'}</button></div>
+    </div>
+  `).join('');
+
+  // Achievements
+  document.getElementById('achGrid').innerHTML = achievementsDef.map(([name,desc,cond,rew])=>`
+    <div class="quest ${state.achievements[name] ? '' : 'locked'}">
+      <div style="display:flex;justify-content:space-between"><strong>${name}</strong><span class="small">+${rew} XP</span></div>
+      <div class="small" style="margin-top:6px">${desc}</div>
+      <div class="small" style="margin-top:6px">${state.achievements[name] ? 'Unlocked' : 'Locked'}</div>
+    </div>
+  `).join('');
+
+  // Pets
+  document.getElementBy
