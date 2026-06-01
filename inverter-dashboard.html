@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Inverter Simulator v5</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: system-ui;
+    background: #0b1220;
+    color: white;
+}
+
+.header {
+    padding: 16px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    background: #111a2e;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 15px;
+}
+
+.panel {
+    background: #111a2e;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 15px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.card {
+    background: #0f172a;
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+input[type="number"] {
+    width: 70px;
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+}
+
+.big { font-size: 26px; font-weight: bold; }
+.small { font-size: 12px; color: #9ca3af; }
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover { background: #1d4ed8; }
+
+.bar {
+    height: 12px;
+    background: #1f2937;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.fill {
+    height: 100%;
+    width: 0%;
+    background: #22c55e;
+}
+
+.warning {
+    color: #f87171;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">⚡ Smart Inverter Simulator v5 (LIVE COUNTDOWN)</div>
+
+<div class="container">
+
+<!-- DEVICES -->
+<div class="panel">
+<h3>Connected Devices</h3>
+
+<div class="grid">
+
+<div class="card">
+<span>Fan (75W each)</span>
+<input type="number" id="fan" value="2" min="0">
+</div>
+
+<div class="card">Infinix Charger (45W) <input type="checkbox" class="d" value="45"></div>
+<div class="card">OnePlus Charger (33W) <input type="checkbox" class="d" value="33"></div>
+<div class="card">iQOO Charger (15W) <input type="checkbox" class="d" value="15"></div>
+<div class="card">Spare Charger (33W) <input type="checkbox" class="d" value="33"></div>
+<div class="card">LED (20W) <input type="checkbox" class="d" value="20"></div>
+<div class="card">Bulb (9W) <input type="checkbox" class="d" value="9"></div>
+<div class="card">WiFi (10W) <input type="checkbox" class="d" value="10"></div>
+
+</div>
+</div>
+
+<!-- CONTROL -->
+<div class="panel">
+<h3>System Control</h3>
+
+<label class="card">
+Safe Mode
+<input type="checkbox" id="safe">
+</label>
+
+<button onclick="calculate()">Calculate Backup Time</button>
+
+<div id="status" class="warning"></div>
+</div>
+
+<!-- OUTPUT -->
+<div class="panel">
+
+<h3>Live System</h3>
+
+<div class="small">Load</div>
+<div class="big" id="load">0W</div>
+
+<div class="small">Battery</div>
+<div class="big" id="battery">1500 Wh</div>
+
+<div class="small">Backup Time</div>
+<div class="big" id="time">--</div>
+
+<div class="small">LIVE Countdown</div>
+<div class="big" id="countdown">--</div>
+
+<div class="bar"><div class="fill" id="bar"></div></div>
+
+</div>
+
+</div>
+
+<script>
+
+let batteryWh = 1500;
+let baseBattery = 1500;
+
+let load = 0;
+let remainingSeconds = 0;
+let timerStarted = false;
+
+function getLoad() {
+
+    let total = 0;
+
+    let fans = Number(document.getElementById("fan").value || 0);
+    total += fans * 75;
+
+    document.querySelectorAll(".d").forEach(d => {
+        if (d.checked) total += Number(d.value);
+    });
+
+    return total;
+}
+
+function calculate() {
+
+    load = getLoad();
+
+    if (load <= 0) {
+        document.getElementById("status").innerText = "Idle";
+        document.getElementById("time").innerText = "--";
+        document.getElementById("countdown").innerText = "--";
+        return;
+    }
+
+    let safeMode = document.getElementById("safe").checked;
+
+    let efficiency = safeMode ? 0.78 : 0.88;
+    let inverterLoss = 0.95;
+
+    let usableWh = batteryWh * efficiency * inverterLoss;
+
+    let backupHours = usableWh / load;
+
+    remainingSeconds = backupHours * 3600;
+    timerStarted = true;
+
+    document.getElementById("load").innerText = load.toFixed(1) + "W";
+    document.getElementById("time").innerText = backupHours.toFixed(2) + " hrs";
+
+    document.getElementById("status").innerText =
+        backupHours > 5 ? "🟢 Excellent" :
+        backupHours > 2 ? "🟡 Moderate" : "🔴 Low";
+
+    updateBar();
+}
+
+function updateBar() {
+    let percent = (batteryWh / baseBattery) * 100;
+    document.querySelector(".fill").style.width = percent + "%";
+    document.getElementById("battery").innerText = batteryWh.toFixed(0) + " Wh";
+}
+
+// LIVE countdown engine
+setInterval(() => {
+
+    if (!timerStarted || load <= 0) {
+        document.getElementById("countdown").innerText = "--";
+        return;
+    }
+
+    if (remainingSeconds > 0) {
+        remainingSeconds -= 1;
+        batteryWh -= load / 3600; // real drain per second
+        if (batteryWh < 0) batteryWh = 0;
+    }
+
+    let h = Math.floor(remainingSeconds / 3600);
+    let m = Math.floor((remainingSeconds % 3600) / 60);
+    let s = Math.floor(remainingSeconds % 60);
+
+    document.getElementById("countdown").innerText =
+        h + "h " + m + "m " + s + "s";
+
+    updateBar();
+
+}, 1000);
+
+</script>
+
+</body>
+</html>
