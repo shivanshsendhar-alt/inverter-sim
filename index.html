@@ -1,10 +1,9 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Hyper Study Runner V7.3</title>
+<title>Hyper Study Runner V7.4</title>
 <style>
 :root{
   --bg:#050713; --panel:rgba(13,18,46,.92); --panel2:rgba(8,12,30,.98);
@@ -91,8 +90,8 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
 <div class="app">
   <div class="hero">
     <div class="panel">
-      <div class="headerTitle">Hyper Study Runner V7.3</div>
-      <div class="headerSub">Your exact 17 stages are now built into the app. Completing any stage updates XP, coins, quests, streak, and save data.</div>
+      <div class="headerTitle">Hyper Study Runner V7.4</div>
+      <div class="headerSub">This version fixes persistence properly. Your progress is saved in localStorage and restored when you reopen the site.</div>
       <div class="topStats">
         <div class="stat"><div class="label">Current Level</div><div class="value" id="levelText">1</div></div>
         <div class="stat"><div class="label">Total XP</div><div class="value" id="xpText">0</div></div>
@@ -177,29 +176,26 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
     </div>
   </div>
 
-  <div class="footer">V7.3 uses your exact curriculum, grouped into four worlds, with real clickable completion logic.</div>
+  <div class="footer">V7.4 restores your saved progress automatically when the page opens.</div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const STORAGE_KEY = (location.pathname || '/hyper-study-runner-v7') + '::hyper_study_runner_v7_state';
+  const STORAGE_KEY = 'hyper_study_runner_v7_4_state';
   const stages = [
     {world:'World 1: Language & Lore', stage:1, title:'English Literature — I Wandered Lonely as a Cloud', desc:'Poem analysis, figures of speech, themes', reward:120},
     {world:'World 1: Language & Lore', stage:2, title:'English Literature — Grandfather and the Python', desc:'Plot progression, character sketches', reward:120},
     {world:'World 1: Language & Lore', stage:3, title:'English Language — Essay, Notice Writing, and Whole Copy Structural Revision', desc:'Writing formats, structure, and revision practice', reward:130},
     {world:'World 1: Language & Lore', stage:4, title:'Hindi — Matrabhumi', desc:'Core text analysis and stanza meanings', reward:120},
     {world:'World 1: Language & Lore', stage:5, title:'Hindi — Bus Ki Yatra + Complete Grammar Notebook Review', desc:'Story review and grammar notebook revision', reward:130},
-
     {world:'World 2: Logic & Digital Architecture', stage:6, title:'Mathematics — Rational Numbers', desc:'Properties, operations, and number lines', reward:140},
     {world:'World 2: Logic & Digital Architecture', stage:7, title:'Mathematics — Exponents', desc:'Laws of exponents and scientific notation conversions', reward:150},
     {world:'World 2: Logic & Digital Architecture', stage:8, title:'Computer Science — Fundamentals of Java', desc:'Syntax, variables, data types, basic logic', reward:160},
     {world:'World 2: Logic & Digital Architecture', stage:9, title:'Computer Science — Spreadsheet', desc:'Formulas, functions, cell referencing, and data sorting', reward:150},
-
     {world:'World 3: The Natural Sciences', stage:10, title:'Physics — Physical Quantities and Measurement', desc:'Units, density calculations, instruments', reward:150},
     {world:'World 3: The Natural Sciences', stage:11, title:'Chemistry — Matter', desc:'States of matter, kinetic theory, phase changes', reward:150},
     {world:'World 3: The Natural Sciences', stage:12, title:'Chemistry — Elements, Mixtures, and Compounds', desc:'Chemical formulas, separation techniques', reward:160},
     {world:'World 3: The Natural Sciences', stage:13, title:'Biology — Human Body: The Circulatory System', desc:'Heart anatomy, blood vessels, double circulation', reward:160},
-
     {world:'World 4: Civilization, Systems & Power', stage:14, title:'Geography — Urbanisation', desc:'Causes, impacts of rapid urban growth, smart city concepts', reward:140},
     {world:'World 4: Civilization, Systems & Power', stage:15, title:'Geography — Migration', desc:'Push and pull factors, economic and social consequences', reward:140},
     {world:'World 4: Civilization, Systems & Power', stage:16, title:'History & Civics — The Union Legislature', desc:'Lok Sabha, Rajya Sabha, law-making structures', reward:150},
@@ -232,12 +228,30 @@ document.addEventListener('DOMContentLoaded', () => {
     pets:{brainbot:false,dragon:false,owl:false,titan:false}, skills:{},
     leaderboard:[{name:'You',xp:0}], examDate:'', settings:{theme:'neon'}, prestige:0, prestigeTokens:0
   });
-  let state = load(), timerSec = 1500, timer = null, running = false, paused = false;
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      return Object.assign(defaultState(), parsed, {
+        stages: Array.isArray(parsed.stages) ? parsed.stages.slice(0, stages.length).concat(Array(Math.max(0, stages.length - parsed.stages.length)).fill(false)) : Array(stages.length).fill(false),
+        pets: Object.assign(defaultState().pets, parsed.pets || {}),
+        skills: Object.assign(defaultState().skills, parsed.skills || {}),
+        settings: Object.assign(defaultState().settings, parsed.settings || {}),
+        leaderboard: Array.isArray(parsed.leaderboard) ? parsed.leaderboard : [{name:'You',xp:0}],
+        quests: Array.isArray(parsed.quests) ? parsed.quests : []
+      });
+    }catch(e){
+      return defaultState();
+    }
+  }
+
+  let state = loadState();
+  let timerSec = 1500, timer = null, running = false, paused = false;
   const $ = id => document.getElementById(id);
 
-  function load(){ try{ const raw = localStorage.getItem(STORAGE_KEY); return raw ? Object.assign(defaultState(), JSON.parse(raw)) : defaultState(); }catch(e){ return defaultState(); } }
   function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-
   function toast(msg){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; $('toastWrap').appendChild(d); setTimeout(()=>d.remove(),3200); }
   function burst(){ for(let i=0;i<8;i++){ const b=document.createElement('div'); b.className='burst'; const x=Math.random()*window.innerWidth,y=Math.random()*window.innerHeight,s=8+Math.random()*16; b.style.left=x+'px'; b.style.top=y+'px'; b.style.width=b.style.height=s+'px'; document.body.appendChild(b); setTimeout(()=>b.remove(),650); } }
   function modal(t,m){ $('modalTitle').textContent=t; $('modalText').textContent=m; $('modal').classList.add('show'); }
@@ -247,6 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function rank(){ return level()>=100?'Exam Titan':level()>=50?'Exam Destroyer':level()>=20?'Focus Machine':level()>=10?'Memory Beast':level()>=5?'Scholar':'Rookie'; }
   function countStages(){ return state.stages.filter(Boolean).length; }
   function petMult(){ let m=1; if(state.pets.brainbot) m*=1.05; if(state.pets.dragon) m*=1.10; if(state.pets.owl) m*=1.05; return m; }
+  function skillQuick(){ return !!state.skills.quick; }
+  function skillRevision(){ return !!state.skills.revision; }
 
   function updateStreak(){
     const today=new Date().toISOString().slice(0,10);
@@ -259,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addXp(v, silent=false){
-    const bonus = 1 + state.prestige*0.02 + (state.skills.quick ? 0.05 : 0);
+    const bonus = 1 + state.prestige*0.02 + (skillQuick() ? 0.05 : 0);
     const gained = Math.round(v * petMult() * bonus);
     const before = level();
     state.xp += gained;
@@ -327,6 +343,10 @@ document.addEventListener('DOMContentLoaded', () => {
     unlock('Midterm Destroyer', state.xp>=5000, 200);
     unlock('Study Addict', state.streak>=7, 200);
     unlock('Exam Titan', level()>=100, 500);
+    state.skills.quick = level()>=2;
+    state.skills.memory = level()>=5;
+    state.skills.focus = level()>=10;
+    state.skills.revision = level()>=20;
   }
 
   function completeStage(i){
@@ -348,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
     state.hoursStudied += 25/60;
     updateStreak();
     addXp(95);
-    if(!shop) addCoins(10);
+    if(!shop) addCoins(10 + (state.skills.focus ? 1 : 0));
     progressQuest('session');
     checkAchievements();
     save(); render(); toast('Session complete!');
@@ -365,7 +385,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function prestige(){
     if(level()<100) return toast('Reach level 100 first.');
-    state.prestige++; state.prestigeTokens++; state.xp=0; state.stages=Array(stages.length).fill(false); state.sessions=0; state.hoursStudied=0; state.streak=0; state.bestStreak=0; state.lastStudyDate=''; state.quests=[]; state.questDate='';
+    state.prestige++; state.prestigeTokens++;
+    state.xp=0; state.stages=Array(stages.length).fill(false); state.sessions=0; state.hoursStudied=0;
+    state.streak=0; state.bestStreak=0; state.lastStudyDate=''; state.quests=[]; state.questDate='';
     save(); render(); modal('Prestige Complete', `Tokens: ${state.prestigeTokens}`); toast('Prestige complete!'); burst();
   }
 
@@ -424,10 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
     $('streakText').textContent=state.streak; $('bestStreakText').textContent=state.bestStreak; $('achCount').textContent=`${Object.values(state.achievements).filter(Boolean).length} unlocked`;
     $('questDateText').textContent=state.questDate||'Today'; $('shopCoins').textContent=`${state.coins} coins`; $('examDateInput').value=state.examDate||''; $('focusState').textContent=running?'Running':paused?'Paused':'Ready';
     $('worldList').innerHTML = renderWorlds();
-    $('questList').innerHTML = state.quests.map(q=>{
-      const p = q.type==='xp' ? Math.min(state.xp,q.target) : q.progress;
-      return `<div class="quest ${q.done?'done':''}"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><strong>${q.name}</strong><span class="badge">+${q.rewardXp} XP / +${q.rewardCoins} Coins</span></div><div class="meta">Progress: ${p}/${q.target}</div><div class="progress" style="margin-top:8px"><span style="width:${Math.min(100,(p/q.target)*100)}%"></span></div></div>`;
-    }).join('');
+    $('questList').innerHTML = state.quests.map(q=>{ const p=q.type==='xp'?Math.min(state.xp,q.target):q.progress; return `<div class="quest ${q.done?'done':''}"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><strong>${q.name}</strong><span class="badge">+${q.rewardXp} XP / +${q.rewardCoins} Coins</span></div><div class="meta">Progress: ${p}/${q.target}</div><div class="progress" style="margin-top:8px"><span style="width:${Math.min(100,(p/q.target)*100)}%"></span></div></div>`; }).join('');
     $('achGrid').innerHTML = [
       ['First Blood','Complete 1 stage',50, countStages()>=1],
       ['Scholar','Reach level 5',100, level()>=5],
@@ -485,4 +504,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-```
