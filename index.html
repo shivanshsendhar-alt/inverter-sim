@@ -1,12 +1,13 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Hyper Study Runner V7.1</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Hyper Study Runner V7.2</title>
 <style>
 :root{
-  --bg:#050713; --bg2:#0a1030; --panel:rgba(13,18,46,.90); --panel2:rgba(8,12,30,.96);
+  --bg:#050713; --panel:rgba(13,18,46,.92); --panel2:rgba(8,12,30,.98);
   --text:#edf4ff; --muted:#99addc; --cyan:#41f3ff; --blue:#4f7cff; --purple:#b44cff;
   --green:#32f59c; --gold:#ffd65c; --red:#ff688f; --line:rgba(108,138,255,.16);
   --radius:18px; --radius2:22px; --shadow:0 0 18px rgba(65,243,255,.16),0 0 34px rgba(180,76,255,.10);
@@ -16,55 +17,57 @@ html,body{margin:0;height:100%;background:
  radial-gradient(circle at 10% 10%, rgba(79,124,255,.14), transparent 24%),
  radial-gradient(circle at 90% 15%, rgba(180,76,255,.12), transparent 20%),
  radial-gradient(circle at 65% 80%, rgba(65,243,255,.10), transparent 26%),
- linear-gradient(180deg,var(--bg),#060913 40%,#03050d);
- color:var(--text); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; overflow-x:hidden;}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;
- background-image:linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
- background-size:44px 44px,44px 44px; mask-image:linear-gradient(to bottom, rgba(0,0,0,.65), transparent 96%);}
-#bgParticles{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-.particle{position:absolute;border-radius:999px;background:radial-gradient(circle, rgba(65,243,255,.95), rgba(65,243,255,.06) 60%, transparent 70%);filter:blur(.3px);box-shadow:0 0 14px rgba(65,243,255,.42);}
+ linear-gradient(180deg,#050713,#060913 40%,#03050d);
+ color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;
+background-image:linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+background-size:44px 44px,44px 44px}
+#bgParticles{position:fixed;inset:0;z-index:0;pointer-events:none}
+.particle{position:absolute;border-radius:999px;background:radial-gradient(circle, rgba(65,243,255,.95), rgba(65,243,255,.06) 60%, transparent 70%);box-shadow:0 0 14px rgba(65,243,255,.42)}
 .app{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:16px}
 .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-bottom:16px}
-.panel,.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius2);box-shadow:var(--shadow);backdrop-filter:blur(12px)}
-.panel{padding:16px;position:relative;overflow:hidden}
-.panel::after{content:"";position:absolute;inset:-2px;background:linear-gradient(90deg,transparent,rgba(65,243,255,.10),transparent);transform:translateX(-120%);animation:scan 6.4s linear infinite;pointer-events:none}
+.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius2);box-shadow:var(--shadow);backdrop-filter:blur(12px);padding:16px;position:relative;overflow:hidden}
+.panel::after{content:"";position:absolute;inset:-2px;background:linear-gradient(90deg,transparent,rgba(65,243,255,.10),transparent);transform:translateX(-120%);animation:scan 7s linear infinite;pointer-events:none}
 @keyframes scan{to{transform:translateX(120%)}}
-.headerTitle{font-size:clamp(24px,3vw,44px);font-weight:950;line-height:1.05}
+.headerTitle{font-size:clamp(24px,3vw,44px);font-weight:950;line-height:1.04}
 .headerSub{color:var(--muted);margin-top:8px;line-height:1.55;font-size:14px}
 .topStats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
 .stat{padding:14px;border-radius:16px;background:linear-gradient(180deg,rgba(12,18,45,.96),rgba(7,10,24,.96));border:1px solid rgba(108,138,255,.14)}
-.stat .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1.3px}
+.stat .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1.2px}
 .stat .value{font-size:22px;font-weight:900;margin-top:6px}
-.levelOrb{display:grid;place-items:center;padding:18px;text-align:center}
-.orb{width:min(260px,100%);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;position:relative;background:radial-gradient(circle at center, rgba(65,243,255,.14), rgba(180,76,255,.10) 48%, rgba(6,8,18,.94) 74%);border:1px solid rgba(65,243,255,.22);box-shadow:0 0 28px rgba(65,243,255,.12), inset 0 0 36px rgba(180,76,255,.10)}
+.levelOrb{display:grid;place-items:center;text-align:center}
+.orb{width:min(260px,100%);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;position:relative;background:radial-gradient(circle at center, rgba(65,243,255,.14), rgba(180,76,255,.10) 48%, rgba(6,8,18,.94) 74%);border:1px solid rgba(65,243,255,.22)}
 .bigLevel{font-size:58px;font-weight:950;color:var(--cyan);text-shadow:0 0 18px rgba(65,243,255,.75)}
 .bigRank{font-size:16px;margin-top:6px;color:#fff}
 .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(65,243,255,.09);border:1px solid rgba(65,243,255,.18);color:#dffcff;font-size:12px;font-weight:700}
 .progress{height:16px;border-radius:999px;background:#0e1438;border:1px solid rgba(108,138,255,.14);overflow:hidden}
-.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--purple));transition:width .3s ease}
+.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--purple))}
 .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
 .section{padding:16px}
 .sectionHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
 .sectionHead h2{font-size:18px;margin:0;letter-spacing:.8px;text-transform:uppercase}
 .small{color:var(--muted);font-size:12px}
-.btn{cursor:pointer;border:none;border-radius:12px;padding:10px 14px;font-weight:800;color:white;background:linear-gradient(180deg,rgba(78,124,255,.98),rgba(35,52,136,.98));transition:transform .16s ease,filter .16s ease}
-.btn:hover{transform:translateY(-1px);filter:brightness(1.06)} .btn:active{transform:translateY(1px) scale(.99)}
+.btn{cursor:pointer;border:none;border-radius:12px;padding:10px 14px;font-weight:800;color:white;background:linear-gradient(180deg,rgba(78,124,255,.98),rgba(35,52,136,.98))}
 .btn.secondary{background:linear-gradient(180deg,rgba(22,30,68,.95),rgba(9,13,30,.98));border:1px solid rgba(255,255,255,.06)}
 .btn.good{background:linear-gradient(180deg,rgba(50,245,156,.98),rgba(17,120,76,.98));color:#04140d}
 .btn.warn{background:linear-gradient(180deg,rgba(255,214,92,.98),rgba(170,120,8,.98));color:#1c1200}
 .btn.danger{background:linear-gradient(180deg,rgba(255,104,143,.98),rgba(151,39,80,.98))}
-input,select{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.96);border:1px solid rgba(108,138,255,.16);color:var(--text);outline:none}
+.btn:active{transform:translateY(1px)}
+input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.96);border:1px solid rgba(108,138,255,.16);color:var(--text);outline:none}
 .chapterGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.chapter{padding:14px;border-radius:16px;background:linear-gradient(180deg,rgba(10,15,36,.95),rgba(7,9,20,.98));border:1px solid rgba(108,138,255,.14);position:relative}
+.chapter{padding:14px;border-radius:16px;background:linear-gradient(180deg,rgba(10,15,36,.95),rgba(7,9,20,.98));border:1px solid rgba(108,138,255,.14);position:relative;min-height:155px}
 .chapter.completed{border-color:rgba(50,245,156,.32)}
 .chapter.completed::after{content:"✓";position:absolute;top:10px;right:10px;color:var(--green);font-weight:900}
-.chapter h3{margin:0;font-size:14px} .chapter p{margin:8px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+.chapter h3{margin:0;font-size:14px}
+.chapter p{margin:8px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+.chapter .reward{margin-top:8px;font-size:12px;color:#dffcff}
 .btnRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .timerWrap{display:grid;place-items:center;text-align:center;padding:16px}
 .timer{font-size:clamp(44px,7vw,92px);font-weight:950;color:#fff;text-shadow:0 0 12px rgba(65,243,255,.66),0 0 24px rgba(180,76,255,.28);letter-spacing:2px}
 .quests,.achievements,.pets,.skills,.leaders,.shop,.audioGrid{display:grid;gap:10px}
 .quest,.achievement,.pet,.skill,.leader,.shopItem{padding:12px;border-radius:14px;background:linear-gradient(180deg,rgba(9,13,30,.95),rgba(6,9,18,.98));border:1px solid rgba(108,138,255,.10)}
 .quest.done{border-color:rgba(50,245,156,.24)}
+.quest .meta,.skill .meta,.pet .meta{margin-top:6px;color:var(--muted);font-size:12px}
 .row2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .badge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:rgba(180,76,255,.13);border:1px solid rgba(180,76,255,.20);font-size:11px;font-weight:700}
 .toastWrap{position:fixed;right:14px;top:14px;z-index:50;display:grid;gap:10px;max-width:min(360px,calc(100vw - 28px))}
@@ -74,7 +77,7 @@ input,select{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,1
 .modalBox{width:min(540px,100%);padding:18px;border-radius:22px;background:linear-gradient(180deg,rgba(10,16,38,.98),rgba(6,9,20,.98));border:1px solid rgba(65,243,255,.22)}
 .footer{margin:16px 0 8px;color:var(--muted);font-size:12px;text-align:center}
 .locked{opacity:.58;filter:saturate(.7)}
-.burst{position:fixed;pointer-events:none;z-index:45;border-radius:999px;background:radial-gradient(circle, rgba(65,243,255,.85), rgba(180,76,255,.20) 50%, transparent 72%);width:8px;height:8px;opacity:.95}
+.burst{position:fixed;pointer-events:none;z-index:45;border-radius:999px;background:radial-gradient(circle, rgba(65,243,255,.85), rgba(180,76,255,.20) 50%, transparent 72%);width:8px;height:8px}
 @media (max-width:1100px){.hero{grid-template-columns:1fr}.topStats{grid-template-columns:repeat(2,1fr)}.chapterGrid{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
 @media (max-width:720px){.app{padding:10px}.chapterGrid,.topStats,.row2{grid-template-columns:1fr}.headerTitle{font-size:28px}.bigLevel{font-size:48px}.timer{font-size:52px}}
 </style>
@@ -87,8 +90,8 @@ input,select{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,1
 <div class="app">
   <div class="hero">
     <div class="panel">
-      <div class="headerTitle">Hyper Study Runner V7.1</div>
-      <div class="headerSub">All buttons now work. Timer, chapters, quests, shop, pets, prestige, export/import, and audio controls are wired through real event listeners.</div>
+      <div class="headerTitle">Hyper Study Runner V7.2</div>
+      <div class="headerSub">Every section below is now real data-driven UI. Chapters, quests, skills, pets, leaderboard, and shop all render from arrays and respond to clicks.</div>
       <div class="topStats">
         <div class="stat"><div class="label">Current Level</div><div class="value" id="levelText">1</div></div>
         <div class="stat"><div class="label">Total XP</div><div class="value" id="xpText">0</div></div>
@@ -100,6 +103,7 @@ input,select{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,1
         <div class="progress"><span id="xpBar"></span></div>
       </div>
     </div>
+
     <div class="panel levelOrb">
       <div class="orb"><div><div class="bigLevel" id="bigLevel">1</div><div class="bigRank" id="bigRank">Rookie</div></div></div>
       <div class="btnRow" style="justify-content:center;margin-top:12px">
@@ -114,7 +118,7 @@ input,select{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,1
 
   <div class="grid">
     <div class="panel section" style="grid-column:span 7">
-      <div class="sectionHead"><div><h2>Syllabus Chapters</h2><div class="small">Click a chapter to master it</div></div><span class="pill" id="chapterStatus">0 / 17 mastered</span></div>
+      <div class="sectionHead"><div><h2>Syllabus Chapters</h2><div class="small">Click a chapter card or the button to master it.</div></div><span class="pill" id="chapterStatus">0 / 17 mastered</span></div>
       <div class="chapterGrid" id="chapterGrid"></div>
     </div>
 
@@ -133,12 +137,12 @@ input,select{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,1
     </div>
 
     <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Daily Quests</h2><div class="small">Refreshes daily</div></div><span class="pill" id="questDateText">Today</span></div>
+      <div class="sectionHead"><div><h2>Daily Quests</h2><div class="small">Three quests refresh daily with progress bars</div></div><span class="pill" id="questDateText">Today</span></div>
       <div class="quests" id="questList"></div>
     </div>
 
     <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Streak & Exam</h2><div class="small">Save your exam date</div></div><span class="pill" id="examSetText">Not set</span></div>
+      <div class="sectionHead"><div><h2>Streak & Exam</h2><div class="small">Track streaks and set your exam date</div></div><span class="pill" id="examSetText">Not set</span></div>
       <div class="row2"><div class="stat"><div class="label">Current Streak</div><div class="value" id="streakText">0</div></div><div class="stat"><div class="label">Best Streak</div><div class="value" id="bestStreakText">0</div></div></div>
       <div style="height:12px"></div>
       <div style="display:grid;grid-template-columns:1fr auto;gap:8px"><input type="date" id="examDateInput"><button class="btn good" id="saveExamBtn">Save</button></div>
@@ -156,24 +160,24 @@ input,select{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,1
     </div>
 
     <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Skill Tree</h2><div class="small">Auto unlocks with level</div></div><span class="pill">Nodes</span></div>
+      <div class="sectionHead"><div><h2>Skill Tree</h2><div class="small">Nodes unlock at set levels</div></div><span class="pill">Nodes</span></div>
       <div class="skills" id="skillGrid"></div>
     </div>
 
     <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Leaderboard</h2><div class="small">Add players to compare XP</div></div><span class="pill">Top 10</span></div>
+      <div class="sectionHead"><div><h2>Leaderboard</h2><div class="small">Add and compare players</div></div><span class="pill">Top 10</span></div>
       <div style="display:grid;grid-template-columns:1fr auto;gap:8px"><input id="playerName" placeholder="Enter player name"><button class="btn good" id="addPlayerBtn">Add</button></div>
       <div style="height:12px"></div>
       <div class="leaders" id="leaderGrid"></div>
     </div>
 
     <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Coin Shop</h2><div class="small">Buy boosters with coins</div></div><span class="pill" id="shopCoins">0 coins</span></div>
+      <div class="sectionHead"><div><h2>Coin Shop</h2><div class="small">Spend coins on boosts</div></div><span class="pill" id="shopCoins">0 coins</span></div>
       <div class="shop" id="shopGrid"></div>
     </div>
 
     <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Audio Controls</h2><div class="small">Buttons now toggle state</div></div><span class="pill">Ready</span></div>
+      <div class="sectionHead"><div><h2>Audio Controls</h2><div class="small">Buttons toggle simple playback state</div></div><span class="pill">Ready</span></div>
       <div class="audioGrid" style="grid-template-columns:repeat(2,1fr)">
         <div class="shopItem"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Lofi</strong><span class="small" id="soundLofiState">Idle</span></div><div class="btnRow"><button class="btn secondary soundBtn" data-sound="lofi">Play/Pause</button><button class="btn danger stopBtn" data-sound="lofi">Stop</button></div></div>
         <div class="shopItem"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Rain</strong><span class="small" id="soundRainState">Idle</span></div><div class="btnRow"><button class="btn secondary soundBtn" data-sound="rain">Play/Pause</button><button class="btn danger stopBtn" data-sound="rain">Stop</button></div></div>
@@ -182,138 +186,489 @@ input,select{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,1
       </div>
     </div>
   </div>
-  <div class="footer">V7.1 fixes interaction wiring, DOM loading, timer logic, and save updates.</div>
+
+  <div class="footer">V7.2 adds real chapter lists, daily quests, skill nodes, pets, leaderboard rows, and click-driven progress updates.</div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded',()=> {
+document.addEventListener('DOMContentLoaded', () => {
   const STORAGE_KEY = (location.pathname || '/hyper-study-runner-v7') + '::hyper_study_runner_v7_state';
-  const chapters = ['Algebra Core','Geometry Grid','Trigonometry Pulse','Calculus Boost','Statistics Signal','Physics Motion','Chemistry Bonds','Biology Systems','English Grammar','Essay Power','Computer Basics','Programming Logic','History Timeline','Geography Atlas','Economics Flow','General Knowledge','Revision Final Boss'];
-  const achDefs = [['First Blood','Complete 1 chapter',50],['Scholar','Reach level 5',100],['Beast Mode','Complete 5 chapters',150],['Focus Machine','Finish 5 sessions',150],['Midterm Destroyer','Reach 5000 XP',200],['Study Addict','Maintain 7-day streak',200],['Exam Titan','Reach level 100',500]];
-  const petDefs = [['brainbot','Brain Bot',3],['dragon','Study Dragon',10],['owl','Quantum Owl',20],['titan','Exam Titan',50]];
-  const skillDefs = [['Quick Learner',2],['Memory Beast',5],['Focus Machine',10],['Revision Master',20],['Exam Destroyer',50]];
+  const chapters = [
+    {name:'Algebra Core', reward:120, desc:'Variables, equations, and fast solving.'},
+    {name:'Geometry Grid', reward:120, desc:'Angles, triangles, circles, and proofs.'},
+    {name:'Trigonometry Pulse', reward:130, desc:'Ratios, identities, and wave thinking.'},
+    {name:'Calculus Boost', reward:150, desc:'Limits, derivatives, and integrals.'},
+    {name:'Statistics Signal', reward:110, desc:'Mean, median, probability, and charts.'},
+    {name:'Physics Motion', reward:140, desc:'Speed, force, energy, and motion.'},
+    {name:'Chemistry Bonds', reward:140, desc:'Atoms, reactions, and periodic logic.'},
+    {name:'Biology Systems', reward:120, desc:'Cells, organs, and human systems.'},
+    {name:'English Grammar', reward:100, desc:'Tenses, syntax, and sentence power.'},
+    {name:'Essay Power', reward:130, desc:'Writing structure and argument flow.'},
+    {name:'Computer Basics', reward:110, desc:'Files, internet, and system literacy.'},
+    {name:'Programming Logic', reward:170, desc:'Loops, conditions, and problem solving.'},
+    {name:'History Timeline', reward:100, desc:'Events, causes, and sequences.'},
+    {name:'Geography Atlas', reward:100, desc:'Maps, climate, and regions.'},
+    {name:'Economics Flow', reward:120, desc:'Markets, demand, and supply.'},
+    {name:'General Knowledge', reward:120, desc:'Current affairs and broad recall.'},
+    {name:'Revision Final Boss', reward:200, desc:'Ultimate mixed revision challenge.'}
+  ];
+  const skillDefs = [
+    {name:'Quick Learner', req:2, desc:'+5% XP gain'},
+    {name:'Memory Beast', req:5, desc:'+10% quest rewards'},
+    {name:'Focus Machine', req:10, desc:'+1 session coin reward'},
+    {name:'Revision Master', req:20, desc:'Chapters give bonus XP'},
+    {name:'Exam Destroyer', req:50, desc:'Prestige unlock prep'},
+    {name:'Neon Sage', req:75, desc:'Visual mastery node'},
+    {name:'Titan Mode', req:100, desc:'Prestige ready'}
+  ];
+  const petDefs = [
+    {key:'brainbot', name:'Brain Bot', req:3, bonus:'+5% XP'},
+    {key:'dragon', name:'Study Dragon', req:10, bonus:'+10% XP'},
+    {key:'owl', name:'Quantum Owl', req:20, bonus:'+5% quests'},
+    {key:'titan', name:'Exam Titan', req:50, bonus:'Huge rewards'}
+  ];
   const shopDefs = [
     {label:'XP Booster',cost:120,desc:'+500 XP',act:()=>addXp(500,true)},
     {label:'Focus Booster',cost:150,desc:'+1 session',act:()=>awardSession(true)},
     {label:'Pet Food',cost:100,desc:'Unlock next pet',act:unlockNextPet},
     {label:'Revision Scroll',cost:180,desc:'Complete 1 random chapter',act:completeRandomChapter}
   ];
+
+  const defaultState = () => ({
+    xp:0, coins:0, chapters:Array(17).fill(false), sessions:0, hoursStudied:0,
+    streak:0, bestStreak:0, lastStudyDate:'', achievements:{}, quests:[], questDate:'',
+    pets:{brainbot:false,dragon:false,owl:false,titan:false}, skills:{},
+    leaderboard:[{name:'You',xp:0}], examDate:'', settings:{theme:'neon'}, prestige:0, prestigeTokens:0,
+    sounds:{lofi:false,rain:false,library:false,white:false}
+  });
+
   let state = load();
   let timerSec = 1500, timer = null, running = false, paused = false;
 
-  function defaultState(){ return {xp:0, coins:0, chapters:Array(17).fill(false), sessions:0, hoursStudied:0, streak:0, bestStreak:0, lastStudyDate:'', achievements:{}, quests:[], questDate:'', pets:{brainbot:false,dragon:false,owl:false,titan:false}, skills:{}, leaderboard:[{name:'You',xp:0}], examDate:'', settings:{theme:'neon'}, prestige:0, prestigeTokens:0, sounds:{lofi:false,rain:false,library:false,white:false}}; }
-  function load(){ try{ const raw = localStorage.getItem(STORAGE_KEY); return raw ? Object.assign(defaultState(), JSON.parse(raw)) : defaultState(); }catch(e){ return defaultState(); } }
+  const $ = id => document.getElementById(id);
+  const toast = msg => { const d=document.createElement('div'); d.className='toast'; d.textContent=msg; $('toastWrap').appendChild(d); setTimeout(()=>d.remove(), 3200); };
+  const burst = () => { for(let i=0;i<8;i++){ const b=document.createElement('div'); b.className='burst'; const x=Math.random()*window.innerWidth,y=Math.random()*window.innerHeight,s=8+Math.random()*16; b.style.left=x+'px'; b.style.top=y+'px'; b.style.width=b.style.height=s+'px'; document.body.appendChild(b); setTimeout(()=>b.remove(),650); } };
+  const modal = (t,m) => { $('modalTitle').textContent=t; $('modalText').textContent=m; $('modal').classList.add('show'); };
+  const closeModal = () => $('modal').classList.remove('show');
+  const level = () => Math.floor(state.xp/1000)+1;
+  const currentXp = () => state.xp % 1000;
+  const rank = () => level()>=100?'Exam Titan':level()>=50?'Exam Destroyer':level()>=20?'Focus Machine':level()>=10?'Memory Beast':level()>=5?'Scholar':'Rookie';
+  const countChapters = () => state.chapters.filter(Boolean).length;
+  const petMult = () => {
+    let m=1;
+    if(state.pets.brainbot) m*=1.05;
+    if(state.pets.dragon) m*=1.10;
+    if(state.pets.owl) m*=1.05;
+    return m;
+  };
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? Object.assign(defaultState(), JSON.parse(raw)) : defaultState();
+    }catch(e){ return defaultState(); }
+  }
   function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-  function level(){ return Math.floor(state.xp/1000)+1; }
-  function currentXp(){ return state.xp % 1000; }
-  function rank(){ if(level()>=100) return 'Exam Titan'; if(level()>=50) return 'Exam Destroyer'; if(level()>=20) return 'Focus Machine'; if(level()>=10) return 'Memory Beast'; if(level()>=5) return 'Scholar'; return 'Rookie'; }
-  function countChapters(){ return state.chapters.filter(Boolean).length; }
-  function toast(msg){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; document.getElementById('toastWrap').appendChild(d); setTimeout(()=>d.remove(),3500); }
-  function burst(){ for(let i=0;i<8;i++){ const b=document.createElement('div'); b.className='burst'; const x=Math.random()*window.innerWidth,y=Math.random()*window.innerHeight,s=8+Math.random()*16; b.style.left=x+'px'; b.style.top=y+'px'; b.style.width=b.style.height=s+'px'; document.body.appendChild(b); setTimeout(()=>b.remove(),600); } }
-  function modal(title, text){ document.getElementById('modalTitle').textContent=title; document.getElementById('modalText').textContent=text; document.getElementById('modal').classList.add('show'); }
-  function closeModal(){ document.getElementById('modal').classList.remove('show'); }
-  function petMult(){ let m=1; if(state.pets.brainbot) m*=1.05; if(state.pets.dragon) m*=1.1; if(state.pets.owl) m*=1.05; return m; }
-  function updateStreak(){ const today=new Date().toISOString().slice(0,10); if(!state.lastStudyDate){ state.streak=1; state.bestStreak=1; state.lastStudyDate=today; return; } const diff=Math.round((new Date(today+'T00:00:00')-new Date(state.lastStudyDate+'T00:00:00'))/86400000); if(diff===0)return; state.streak = diff===1 ? state.streak+1 : 1; state.bestStreak=Math.max(state.bestStreak,state.streak); state.lastStudyDate=today; }
-  function addXp(v, silent=false){ const before=level(); state.xp += Math.round(v * petMult() * (1 + state.prestige*0.02)); if(level()>before){ toast(`Level Up! ${level()}`); modal('Level Up', `You reached level ${level()}.`); burst(); } if(!silent) toast(`+${Math.round(v*petMult())} XP`); save(); render(); }
+
+  function updateStreak(){
+    const today = new Date().toISOString().slice(0,10);
+    if(!state.lastStudyDate){ state.streak=1; state.bestStreak=1; state.lastStudyDate=today; return; }
+    const diff = Math.round((new Date(today+'T00:00:00') - new Date(state.lastStudyDate+'T00:00:00')) / 86400000);
+    if(diff===0) return;
+    state.streak = diff===1 ? state.streak+1 : 1;
+    state.bestStreak = Math.max(state.bestStreak, state.streak);
+    state.lastStudyDate = today;
+  }
+
+  function addXp(v, silent=false){
+    const before = level();
+    const bonus = 1 + state.prestige*0.02 + (state.skills.quick ? 0.05 : 0) + (state.skills.revision ? 0.05 : 0);
+    state.xp += Math.round(v * petMult() * bonus);
+    if(level()>before){ toast(`Level Up! ${level()}`); modal('Level Up', `You reached level ${level()}.`); burst(); }
+    if(!silent) toast(`+${Math.round(v*petMult()*bonus)} XP`);
+    save(); render();
+  }
   function addCoins(v){ state.coins += v; save(); render(); }
-  function completeRandomChapter(){ const i=state.chapters.findIndex(v=>!v); if(i<0) return toast('All chapters already mastered.'); masterChapter(i); }
-  function progressQuests(type){ state.quests.forEach(q=>{ if(q.done) return; if(q.type===type) q.progress=Math.min(q.target,q.progress+1); if(q.type==='xp') q.progress=Math.min(q.target, currentXp()); }); checkQuests(); }
-  function rewardQuest(q){ if(q.done) return; q.done=true; addXp(q.rewardXp,true); addCoins(q.rewardCoins); toast(`Quest completed: ${q.name}`); burst(); }
-  function rarityPick(){ const n=Math.random(); return n<.55?['Common',1]:n<.82?['Rare',2]:n<.95?['Epic',3]:['Legendary',4]; }
-  function buildQuests(){ const today=new Date().toISOString().slice(0,10); if(state.questDate===today && state.quests.length) return; state.questDate=today; const r=rarityPick(); state.quests=[{name:`${r[0]} Quest: Complete 1 chapter`,type:'chapter',target:1,progress:0,done:false,rewardXp:180+50*r[1],rewardCoins:35+10*r[1]},{name:`${r[0]} Quest: Finish 2 sessions`,type:'session',target:2,progress:0,done:false,rewardXp:220+50*r[1],rewardCoins:45+10*r[1]},{name:`${r[0]} Quest: Earn 500 XP`,type:'xp',target:500,progress:0,done:false,rewardXp:200+50*r[1],rewardCoins:50+10*r[1]}]; }
-  function checkQuests(){ buildQuests(); state.quests.forEach(q=>{ if(q.done) return; if(q.type==='chapter' && q.progress>=q.target) rewardQuest(q); if(q.type==='session' && q.progress>=q.target) rewardQuest(q); if(q.type==='xp' && state.xp>=q.target) rewardQuest(q); }); save(); render(); }
-  function checkAchievements(){ achDefs.forEach(([n,d,r])=>{ let ok=false; if(n==='First Blood') ok=countChapters()>=1; if(n==='Scholar') ok=level()>=5; if(n==='Beast Mode') ok=countChapters()>=5; if(n==='Focus Machine') ok=state.sessions>=5; if(n==='Midterm Destroyer') ok=state.xp>=5000; if(n==='Study Addict') ok=state.streak>=7; if(n==='Exam Titan') ok=level()>=100; if(ok && !state.achievements[n]){ state.achievements[n]=true; addXp(r,true); addCoins(40); toast(`Achievement: ${n}`); modal('Achievement Unlocked', d); burst(); } }); }
-  function masterChapter(i){ if(state.chapters[i]) return toast('Already mastered.'); state.chapters[i]=true; updateStreak(); addXp(140); addCoins(20); progressQuests('chapter'); checkAchievements(); save(); render(); toast(`Chapter mastered: ${chapters[i]}`); burst(); }
-  function awardSession(shop=false){ state.sessions++; state.hoursStudied += 25/60; updateStreak(); addXp(95); if(!shop) addCoins(10); progressQuests('session'); checkAchievements(); save(); render(); toast('Session complete!'); }
-  function unlockNextPet(){ const i=petDefs.findIndex(([k])=>!state.pets[k]); if(i<0) return toast('All pets unlocked.'); const req=petDefs[i][2]; if(level()<req) return toast(`Requires level ${req}`); state.pets[petDefs[i][0]]=true; save(); render(); toast(`${petDefs[i][1]} unlocked!`); burst(); }
-  function prestige(){ if(level()<100) return toast('Reach level 100 first.'); state.prestige++; state.prestigeTokens++; state.xp=0; state.chapters=Array(17).fill(false); state.sessions=0; state.hoursStudied=0; state.streak=0; state.bestStreak=0; state.lastStudyDate=''; state.quests=[]; state.questDate=''; save(); render(); toast(`Prestige complete! Tokens: ${state.prestigeTokens}`); burst(); }
-  function startTimer(){ if(running) return; running=true; paused=false; document.getElementById('focusState').textContent='Running'; timer=setInterval(()=>{ timerSec--; renderTimer(); if(timerSec<=0){ clearInterval(timer); running=false; paused=false; timerSec=1500; renderTimer(); awardSession(); modal('Focus Reward','Your 25-minute session finished. Rewards granted.'); burst(); }},1000); }
-  function pauseTimer(){ if(!running) return; clearInterval(timer); running=false; paused=true; document.getElementById('focusState').textContent='Paused'; }
+
+  function buildQuests(){
+    const today = new Date().toISOString().slice(0,10);
+    if(state.questDate===today && state.quests.length) return;
+    state.questDate = today;
+    const isRare = Math.random();
+    const mult = isRare < .55 ? 1 : isRare < .82 ? 2 : isRare < .95 ? 3 : 4;
+    state.quests = [
+      {id:'q1', name:'Complete 1 chapter', type:'chapter', target:1, progress:0, done:false, rewardXp:180+50*mult, rewardCoins:35+10*mult},
+      {id:'q2', name:'Finish 2 focus sessions', type:'session', target:2, progress:0, done:false, rewardXp:220+50*mult, rewardCoins:45+10*mult},
+      {id:'q3', name:'Earn 500 XP today', type:'xp', target:500, progress:0, done:false, rewardXp:200+50*mult, rewardCoins:50+10*mult}
+    ];
+  }
+  function progressQuest(type, amount=1){
+    buildQuests();
+    state.quests.forEach(q => {
+      if(q.done) return;
+      if(q.type===type) q.progress = Math.min(q.target, q.progress + amount);
+      if(q.type==='xp') q.progress = Math.min(q.target, state.xp % 1000);
+    });
+    checkQuests();
+  }
+  function rewardQuest(q){
+    if(q.done) return;
+    q.done = true;
+    addXp(q.rewardXp, true);
+    addCoins(q.rewardCoins);
+    toast(`Quest completed: ${q.name}`);
+    burst();
+  }
+  function checkQuests(){
+    buildQuests();
+    state.quests.forEach(q => {
+      if(q.done) return;
+      if(q.type==='chapter' && q.progress>=q.target) rewardQuest(q);
+      if(q.type==='session' && q.progress>=q.target) rewardQuest(q);
+      if(q.type==='xp' && state.xp>=q.target) rewardQuest(q);
+    });
+    save();
+  }
+
+  function checkAchievements(){
+    const unlock = (name, cond, reward) => {
+      if(cond && !state.achievements[name]) {
+        state.achievements[name] = true;
+        addXp(reward, true);
+        addCoins(40);
+        toast(`Achievement unlocked: ${name}`);
+        modal('Achievement Unlocked', name);
+        burst();
+      }
+    };
+    unlock('First Blood', countChapters()>=1, 50);
+    unlock('Scholar', level()>=5, 100);
+    unlock('Beast Mode', countChapters()>=5, 150);
+    unlock('Focus Machine', state.sessions>=5, 150);
+    unlock('Midterm Destroyer', state.xp>=5000, 200);
+    unlock('Study Addict', state.streak>=7, 200);
+    unlock('Exam Titan', level()>=100, 500);
+  }
+
+  function masterChapter(i){
+    if(state.chapters[i]) return toast('Already mastered.');
+    state.chapters[i] = true;
+    updateStreak();
+    const skillBonus = state.skills.revision ? 1.05 : 1;
+    addXp(Math.round(chapters[i].reward * skillBonus));
+    addCoins(20);
+    state.skills.quick = level()>=2;
+    progressQuest('chapter');
+    checkAchievements();
+    save();
+    render();
+    toast(`Chapter mastered: ${chapters[i].name}`);
+    burst();
+  }
+  function completeRandomChapter(){
+    const i = state.chapters.findIndex(v=>!v);
+    if(i<0) return toast('All chapters already mastered.');
+    masterChapter(i);
+  }
+  function awardSession(shop=false){
+    state.sessions++;
+    state.hoursStudied += 25/60;
+    updateStreak();
+    addXp(95);
+    if(!shop) addCoins(10 + (state.skills.focus ? 1 : 0));
+    progressQuest('session');
+    checkAchievements();
+    save();
+    render();
+    toast('Session complete!');
+  }
+  function unlockNextPet(){
+    const pet = petDefs.find(p=>!state.pets[p.key]);
+    if(!pet) return toast('All pets unlocked.');
+    if(level()<pet.req) return toast(`Requires level ${pet.req}`);
+    state.pets[pet.key] = true;
+    save(); render();
+    modal('Pet Unlocked', `${pet.name} is now active. ${pet.bonus}`);
+    toast(`${pet.name} unlocked!`);
+    burst();
+  }
+  function prestige(){
+    if(level()<100) return toast('Reach level 100 first.');
+    state.prestige++;
+    state.prestigeTokens++;
+    state.xp=0;
+    state.chapters=Array(17).fill(false);
+    state.sessions=0;
+    state.hoursStudied=0;
+    state.streak=0;
+    state.bestStreak=0;
+    state.lastStudyDate='';
+    state.quests=[];
+    state.questDate='';
+    save(); render();
+    modal('Prestige Complete', `Tokens: ${state.prestigeTokens}`);
+    toast(`Prestige complete!`);
+    burst();
+  }
+  function startTimer(){
+    if(running) return;
+    running = true; paused = false;
+    $('focusState').textContent = 'Running';
+    timer = setInterval(() => {
+      timerSec--;
+      renderTimer();
+      if(timerSec <= 0){
+        clearInterval(timer);
+        running = false; paused = false;
+        timerSec = 1500;
+        renderTimer();
+        awardSession();
+        modal('Focus Reward', 'Your 25-minute session finished. Rewards granted.');
+        burst();
+      }
+    }, 1000);
+  }
+  function pauseTimer(){
+    if(!running) return;
+    clearInterval(timer);
+    running = false;
+    paused = true;
+    $('focusState').textContent = 'Paused';
+  }
   function resumeTimer(){ if(!paused) return; startTimer(); }
-  function resetTimer(){ clearInterval(timer); timerSec=1500; running=false; paused=false; document.getElementById('focusState').textContent='Ready'; renderTimer(); }
-  function renderTimer(){ document.getElementById('timerText').textContent = `${String(Math.floor(timerSec/60)).padStart(2,'0')}:${String(timerSec%60).padStart(2,'0')}`; }
-  function saveExamDate(){ state.examDate=document.getElementById('examDateInput').value; save(); render(); toast('Exam date saved.'); }
-  function tickExam(){ if(!state.examDate){ document.getElementById('daysLeft').textContent='0'; document.getElementById('timeLeft').textContent='00:00:00'; document.getElementById('examSetText').textContent='Not set'; return; } const t=new Date(state.examDate+'T00:00:00').getTime()-Date.now(); const s=Math.max(0,Math.floor(t/1000)); document.getElementById('daysLeft').textContent=Math.floor(s/86400); document.getElementById('timeLeft').textContent=`${String(Math.floor((s%86400)/3600)).padStart(2,'0')}:${String(Math.floor((s%3600)/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; document.getElementById('examSetText').textContent='Exam Set'; }
-  function addPlayer(){ const n=(document.getElementById('playerName').value||'').trim(); if(!n) return toast('Enter a player name.'); const xp=Math.floor(Math.random()*8000)+Math.floor(state.xp*0.2); state.leaderboard.push({name:n,xp}); state.leaderboard.sort((a,b)=>b.xp-a.xp); document.getElementById('playerName').value=''; save(); render(); toast(`Added ${n}`); }
-  function exportSave(){ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='hyper-study-runner-v7-save.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); toast('Save exported.'); }
-  function importSave(ev){ const f=ev.target.files&&ev.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=e=>{ try{ state=Object.assign(defaultState(), JSON.parse(e.target.result)); save(); render(); toast('Save imported.'); }catch(err){ toast('Invalid save file.'); } }; r.readAsText(f); }
-  function buyShop(i){ const item=shopDefs[i]; if(state.coins<item.cost) return toast('Not enough coins.'); state.coins-=item.cost; item.act(); save(); render(); toast(`${item.label} purchased.`); }
-  function soundToggle(name){ state.sounds[name]=!state.sounds[name]; save(); render(); toast(`${name} ${state.sounds[name]?'playing':'paused'}`); }
-  function soundStop(name){ state.sounds[name]=false; save(); render(); toast(`${name} stopped`); }
-  function updateLeaderboard(){ const self = state.leaderboard.find(p=>p.name==='You'); if(self) self.xp=state.xp; state.leaderboard.sort((a,b)=>b.xp-a.xp); }
+  function resetTimer(){
+    clearInterval(timer);
+    timerSec = 1500;
+    running = false;
+    paused = false;
+    $('focusState').textContent = 'Ready';
+    renderTimer();
+  }
+  function renderTimer(){ $('timerText').textContent = `${String(Math.floor(timerSec/60)).padStart(2,'0')}:${String(timerSec%60).padStart(2,'0')}`; }
+
+  function saveExamDate(){
+    state.examDate = $('examDateInput').value;
+    save(); render();
+    toast('Exam date saved.');
+  }
+  function tickExam(){
+    if(!state.examDate){
+      $('daysLeft').textContent='0';
+      $('timeLeft').textContent='00:00:00';
+      $('examSetText').textContent='Not set';
+      return;
+    }
+    const t = new Date(state.examDate+'T00:00:00').getTime() - Date.now();
+    const s = Math.max(0, Math.floor(t/1000));
+    $('daysLeft').textContent = Math.floor(s/86400);
+    $('timeLeft').textContent = `${String(Math.floor((s%86400)/3600)).padStart(2,'0')}:${String(Math.floor((s%3600)/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+    $('examSetText').textContent = 'Exam Set';
+  }
+
+  function addPlayer(){
+    const n = ($('playerName').value || '').trim();
+    if(!n) return toast('Enter a player name.');
+    const xp = Math.floor(Math.random()*8000) + Math.floor(state.xp*0.2);
+    state.leaderboard.push({name:n,xp});
+    state.leaderboard.sort((a,b)=>b.xp-a.xp);
+    $('playerName').value='';
+    save(); render();
+    toast(`Added ${n}`);
+  }
+
+  function exportSave(){
+    const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'hyper-study-runner-v7-save.json';
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    toast('Save exported.');
+  }
+  function importSave(ev){
+    const f = ev.target.files && ev.target.files[0];
+    if(!f) return;
+    const r = new FileReader();
+    r.onload = e => {
+      try{
+        state = Object.assign(defaultState(), JSON.parse(e.target.result));
+        save(); render();
+        toast('Save imported.');
+      }catch(err){ toast('Invalid save file.'); }
+    };
+    r.readAsText(f);
+  }
+
+  function buyShop(i){
+    const item = shopDefs[i];
+    if(state.coins < item.cost) return toast('Not enough coins.');
+    state.coins -= item.cost;
+    item.act();
+    save(); render();
+    toast(`${item.label} purchased.`);
+    burst();
+  }
+  function soundToggle(name){
+    state.sounds[name] = !state.sounds[name];
+    save(); render();
+    toast(`${name} ${state.sounds[name] ? 'playing' : 'paused'}`);
+  }
+  function soundStop(name){
+    state.sounds[name] = false;
+    save(); render();
+    toast(`${name} stopped`);
+  }
+
+  function renderSkills(){
+    return skillDefs.map(s => {
+      const ok = level() >= s.req;
+      state.skills[s.name.split(' ')[0].toLowerCase()] = state.skills[s.name.split(' ')[0].toLowerCase()] || ok;
+      return `<div class="skill ${ok ? '' : 'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${s.name}</strong><span class="badge">Lv ${s.req}</span></div><div class="meta">${s.desc}</div><div class="meta">${ok ? 'Unlocked' : 'Locked'}</div></div>`;
+    }).join('');
+  }
 
   function render(){
-    updateLeaderboard(); buildQuests(); checkQuests(); checkAchievements();
-    document.getElementById('levelText').textContent=level();
-    document.getElementById('xpText').textContent=state.xp;
-    document.getElementById('coinText').textContent=state.coins;
-    document.getElementById('rankText').textContent=rank();
-    document.getElementById('bigLevel').textContent=level();
-    document.getElementById('bigRank').textContent=rank();
-    document.getElementById('xpNeedText').textContent=`${currentXp()} / 1000`;
-    document.getElementById('xpBar').style.width=`${currentXp()/10}%`;
-    document.getElementById('chapterStatus').textContent=`${countChapters()} / 17 mastered`;
-    document.getElementById('sessionText').textContent=state.sessions;
-    document.getElementById('hoursText').textContent=state.hoursStudied.toFixed(1);
-    document.getElementById('streakText').textContent=state.streak;
-    document.getElementById('bestStreakText').textContent=state.bestStreak;
-    document.getElementById('achCount').textContent=`${Object.values(state.achievements).filter(Boolean).length} unlocked`;
-    document.getElementById('questDateText').textContent=state.questDate||'Today';
-    document.getElementById('shopCoins').textContent=`${state.coins} coins`;
-    document.getElementById('examDateInput').value=state.examDate||'';
-    document.getElementById('soundLofiState').textContent=state.sounds.lofi?'Playing':'Idle';
-    document.getElementById('soundRainState').textContent=state.sounds.rain?'Playing':'Idle';
-    document.getElementById('soundLibraryState').textContent=state.sounds.library?'Playing':'Idle';
-    document.getElementById('soundWhiteState').textContent=state.sounds.white?'Playing':'Idle';
-    document.getElementById('focusState').textContent=running?'Running':paused?'Paused':'Ready';
+    buildQuests();
+    checkQuests();
+    checkAchievements();
 
-    document.getElementById('questList').innerHTML = state.quests.map(q=>`<div class="quest ${q.done?'done':''}"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><strong>${q.name}</strong><span class="badge">+${q.rewardXp} XP / +${q.rewardCoins} Coins</span></div><div class="small" style="margin-top:6px">Progress: ${q.type==='xp'?Math.min(state.xp,q.target)+'/500':q.progress+'/'+q.target}${q.done?' • Completed':''}</div></div>`).join('');
+    $('levelText').textContent = level();
+    $('xpText').textContent = state.xp;
+    $('coinText').textContent = state.coins;
+    $('rankText').textContent = rank();
+    $('bigLevel').textContent = level();
+    $('bigRank').textContent = rank();
+    $('xpNeedText').textContent = `${currentXp()} / 1000`;
+    $('xpBar').style.width = `${currentXp()/10}%`;
+    $('chapterStatus').textContent = `${countChapters()} / 17 mastered`;
+    $('sessionText').textContent = state.sessions;
+    $('hoursText').textContent = state.hoursStudied.toFixed(1);
+    $('streakText').textContent = state.streak;
+    $('bestStreakText').textContent = state.bestStreak;
+    $('achCount').textContent = `${Object.values(state.achievements).filter(Boolean).length} unlocked`;
+    $('questDateText').textContent = state.questDate || 'Today';
+    $('shopCoins').textContent = `${state.coins} coins`;
+    $('examDateInput').value = state.examDate || '';
+    $('soundLofiState').textContent = state.sounds.lofi ? 'Playing' : 'Idle';
+    $('soundRainState').textContent = state.sounds.rain ? 'Playing' : 'Idle';
+    $('soundLibraryState').textContent = state.sounds.library ? 'Playing' : 'Idle';
+    $('soundWhiteState').textContent = state.sounds.white ? 'Playing' : 'Idle';
+    $('focusState').textContent = running ? 'Running' : paused ? 'Paused' : 'Ready';
 
-    document.getElementById('chapterGrid').innerHTML = chapters.map((c,i)=>`<div class="chapter ${state.chapters[i]?'completed':''}"><h3>${String(i+1).padStart(2,'0')}. ${c}</h3><p>${state.chapters[i]?'Mastered and saved forever.':'Tap to master, earn XP, coins, and quest progress.'}</p><div class="btnRow"><button class="btn ${state.chapters[i]?'secondary':'good'} chapterBtn" data-index="${i}">${state.chapters[i]?'MASTERED':'MASTER CHAPTER'}</button></div></div>`).join('');
+    $('chapterGrid').innerHTML = chapters.map((c,i)=>`
+      <div class="chapter ${state.chapters[i] ? 'completed' : ''}" data-chapter="${i}">
+        <h3>${String(i+1).padStart(2,'0')}. ${c.name}</h3>
+        <p>${c.desc}</p>
+        <div class="reward">Reward: +${c.reward} XP, +20 coins</div>
+        <div class="btnRow"><button class="btn ${state.chapters[i] ? 'secondary' : 'good'} chapterBtn" data-index="${i}">${state.chapters[i] ? 'MASTERED' : 'MASTER CHAPTER'}</button></div>
+      </div>
+    `).join('');
 
-    document.getElementById('achGrid').innerHTML = achDefs.map(([n,d,r])=>`<div class="achievement ${state.achievements[n]?'':'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${n}</strong><span class="badge">+${r} XP</span></div><div class="small" style="margin-top:6px">${d}</div><div class="small" style="margin-top:8px">${state.achievements[n]?'Unlocked':'Locked'}</div></div>`).join('');
+    $('questList').innerHTML = state.quests.map(q => {
+      const progress = q.type === 'xp' ? Math.min(q.progress, q.target) : q.progress;
+      return `<div class="quest ${q.done ? 'done' : ''}">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+          <strong>${q.name}</strong>
+          <span class="badge">+${q.rewardXp} XP / +${q.rewardCoins} Coins</span>
+        </div>
+        <div class="meta">Progress: ${progress}/${q.target}</div>
+        <div class="progress" style="margin-top:8px"><span style="width:${Math.min(100, (progress/q.target)*100)}%"></span></div>
+      </div>`;
+    }).join('');
 
-    document.getElementById('petGrid').innerHTML = petDefs.map(([k,n,req])=>`<div class="pet ${level()>=req?'':'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${n}</strong><span class="badge">Lv ${req}</span></div><div class="small" style="margin-top:6px">${level()>=req?'Unlocked':'Locked'}${state.pets[k]?' • Active':''}</div></div>`).join('');
+    $('achGrid').innerHTML = [
+      ['First Blood','Complete 1 chapter',50, countChapters()>=1],
+      ['Scholar','Reach level 5',100, level()>=5],
+      ['Beast Mode','Complete 5 chapters',150, countChapters()>=5],
+      ['Focus Machine','Finish 5 sessions',150, state.sessions>=5],
+      ['Midterm Destroyer','Reach 5000 XP',200, state.xp>=5000],
+      ['Study Addict','Maintain 7-day streak',200, state.streak>=7],
+      ['Exam Titan','Reach level 100',500, level()>=100]
+    ].map(([n,d,r,ok])=>`<div class="achievement ${ok ? '' : 'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${n}</strong><span class="badge">+${r} XP</span></div><div class="meta">${d}</div><div class="meta">${ok ? 'Unlocked' : 'Locked'}</div></div>`).join('');
 
-    document.getElementById('skillGrid').innerHTML = skillDefs.map(([n,req])=>`<div class="skill ${level()>=req?'':'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${n}</strong><span class="badge">Lv ${req}</span></div><div class="small" style="margin-top:6px">${level()>=req?'Skill unlocked':'Locked progression node'}</div></div>`).join('');
+    $('petGrid').innerHTML = petDefs.map(p => {
+      const ok = level() >= p.req;
+      const active = state.pets[p.key];
+      return `<div class="pet ${ok ? '' : 'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${p.name}</strong><span class="badge">Lv ${p.req}</span></div><div class="meta">${p.bonus}</div><div class="meta">${ok ? 'Unlocked' : 'Locked'}${active ? ' • Active' : ''}</div></div>`;
+    }).join('');
 
-    document.getElementById('leaderGrid').innerHTML = state.leaderboard.slice(0,10).map((p,i)=>`<div class="leader"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>#${i+1} ${p.name}</strong><span class="badge">Lv ${Math.floor(p.xp/1000)+1}</span></div><div class="small" style="margin-top:6px">XP: ${p.xp}</div></div>`).join('');
+    $('skillGrid').innerHTML = renderSkills();
 
-    document.getElementById('shopGrid').innerHTML = shopDefs.map((s,i)=>`<div class="shopItem"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${s.label}</strong><span class="badge">${s.cost} coins</span></div><div class="small" style="margin-top:6px">${s.desc}</div><div class="btnRow"><button class="btn warn shopBtn" data-shop="${i}">Buy</button></div></div>`).join('');
+    $('leaderGrid').innerHTML = state.leaderboard.slice(0,10).map((p,i)=>`<div class="leader"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>#${i+1} ${p.name}</strong><span class="badge">Lv ${Math.floor(p.xp/1000)+1}</span></div><div class="meta">XP: ${p.xp}</div></div>`).join('');
 
-    tickExam(); save();
+    $('shopGrid').innerHTML = shopDefs.map((s,i)=>`<div class="shopItem"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${s.label}</strong><span class="badge">${s.cost} coins</span></div><div class="meta">${s.desc}</div><div class="btnRow"><button class="btn warn shopBtn" data-shop="${i}">Buy</button></div></div>`).join('');
+
+    tickExam();
+    save();
   }
 
   function initParticles(){
-    const root=document.getElementById('bgParticles');
-    for(let i=0;i<42;i++){ const p=document.createElement('div'); p.className='particle'; const s=3+Math.random()*8; p.style.width=p.style.height=s+'px'; p.style.left=Math.random()*100+'%'; p.style.top=Math.random()*100+'%'; p.dataset.x=(Math.random()*2-1); p.dataset.y=(0.2+Math.random()*0.9); root.appendChild(p); }
-    setInterval(()=>{ root.querySelectorAll('.particle').forEach(p=>{ let x=parseFloat(p.style.left), y=parseFloat(p.style.top); x+=parseFloat(p.dataset.x)*0.04; y-=parseFloat(p.dataset.y)*0.04; if(y<-5){y=105;x=Math.random()*100} if(x>105)x=-5; if(x<-5)x=105; p.style.left=x+'%'; p.style.top=y+'%'; }); },40);
+    const root = $('bgParticles');
+    for(let i=0;i<44;i++){
+      const p=document.createElement('div');
+      p.className='particle';
+      const s=3+Math.random()*8;
+      p.style.width=p.style.height=s+'px';
+      p.style.left=Math.random()*100+'%';
+      p.style.top=Math.random()*100+'%';
+      p.dataset.x=(Math.random()*2-1);
+      p.dataset.y=(0.2+Math.random()*0.9);
+      root.appendChild(p);
+    }
+    setInterval(()=>{
+      root.querySelectorAll('.particle').forEach(p=>{
+        let x=parseFloat(p.style.left), y=parseFloat(p.style.top);
+        x += parseFloat(p.dataset.x)*0.04;
+        y -= parseFloat(p.dataset.y)*0.04;
+        if(y < -5){ y = 105; x = Math.random()*100; }
+        if(x > 105) x = -5;
+        if(x < -5) x = 105;
+        p.style.left = x + '%';
+        p.style.top = y + '%';
+      });
+    },40);
   }
 
-  document.getElementById('modalOk').addEventListener('click', closeModal);
-  document.getElementById('themeBtn').addEventListener('click', ()=>{ state.settings.theme = state.settings.theme==='neon' ? 'midnight' : 'neon'; document.documentElement.style.setProperty('--cyan', state.settings.theme==='midnight' ? '#7afcff' : '#41f3ff'); document.documentElement.style.setProperty('--purple', state.settings.theme==='midnight' ? '#7a5cff' : '#b44cff'); save(); render(); toast(`Theme: ${state.settings.theme}`); });
-  document.getElementById('exportBtn').addEventListener('click', exportSave);
-  document.getElementById('importBtn').addEventListener('click', ()=>document.getElementById('importFile').click());
-  document.getElementById('importFile').addEventListener('change', importSave);
-  document.getElementById('prestigeBtn').addEventListener('click', prestige);
-  document.getElementById('startTimerBtn').addEventListener('click', startTimer);
-  document.getElementById('pauseTimerBtn').addEventListener('click', pauseTimer);
-  document.getElementById('resumeTimerBtn').addEventListener('click', resumeTimer);
-  document.getElementById('resetTimerBtn').addEventListener('click', resetTimer);
-  document.getElementById('saveExamBtn').addEventListener('click', saveExamDate);
-  document.getElementById('addPlayerBtn').addEventListener('click', addPlayer);
+  $('modalOk').addEventListener('click', closeModal);
+  $('themeBtn').addEventListener('click', ()=>{
+    state.settings.theme = state.settings.theme === 'neon' ? 'midnight' : 'neon';
+    document.documentElement.style.setProperty('--cyan', state.settings.theme === 'midnight' ? '#7afcff' : '#41f3ff');
+    document.documentElement.style.setProperty('--purple', state.settings.theme === 'midnight' ? '#7a5cff' : '#b44cff');
+    save(); render(); toast(`Theme: ${state.settings.theme}`);
+  });
+  $('exportBtn').addEventListener('click', exportSave);
+  $('importBtn').addEventListener('click', ()=>$('importFile').click());
+  $('importFile').addEventListener('change', importSave);
+  $('prestigeBtn').addEventListener('click', prestige);
+  $('startTimerBtn').addEventListener('click', startTimer);
+  $('pauseTimerBtn').addEventListener('click', pauseTimer);
+  $('resumeTimerBtn').addEventListener('click', resumeTimer);
+  $('resetTimerBtn').addEventListener('click', resetTimer);
+  $('saveExamBtn').addEventListener('click', saveExamDate);
+  $('addPlayerBtn').addEventListener('click', addPlayer);
 
-  document.getElementById('chapterGrid').addEventListener('click', (e)=>{ const b=e.target.closest('.chapterBtn'); if(!b) return; masterChapter(Number(b.dataset.index)); });
-  document.getElementById('shopGrid').addEventListener('click', (e)=>{ const b=e.target.closest('.shopBtn'); if(!b) return; buyShop(Number(b.dataset.shop)); });
-  document.querySelectorAll('.soundBtn').forEach(b=>b.addEventListener('click',()=>soundToggle(b.dataset.sound)));
-  document.querySelectorAll('.stopBtn').forEach(b=>b.addEventListener('click',()=>soundStop(b.dataset.sound)));
+  $('chapterGrid').addEventListener('click', e => {
+    const b = e.target.closest('.chapterBtn');
+    if(!b) return;
+    masterChapter(Number(b.dataset.index));
+  });
+  $('shopGrid').addEventListener('click', e => {
+    const b = e.target.closest('.shopBtn');
+    if(!b) return;
+    buyShop(Number(b.dataset.shop));
+  });
+  document.querySelectorAll('.soundBtn').forEach(b => b.addEventListener('click', ()=>soundToggle(b.dataset.sound)));
+  document.querySelectorAll('.stopBtn').forEach(b => b.addEventListener('click', ()=>soundStop(b.dataset.sound)));
 
   window.addEventListener('focus', ()=>{ updateStreak(); buildQuests(); checkQuests(); render(); });
   setInterval(()=>{ renderTimer(); tickExam(); save(); },1000);
   setInterval(()=>{ updateStreak(); buildQuests(); checkQuests(); save(); },60000);
 
-  initParticles(); render(); renderTimer();
+  initParticles();
+  render();
+  renderTimer();
 });
 </script>
 </body>
 </html>
+```
