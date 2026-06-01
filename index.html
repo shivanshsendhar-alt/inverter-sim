@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Hyper Study Runner V7.6</title>
+<title>Hyper Study Runner V7.4</title>
 <style>
 :root{
   --bg:#050713; --panel:rgba(13,18,46,.92); --panel2:rgba(8,12,30,.98);
@@ -78,14 +78,8 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
 .locked{opacity:.58;filter:saturate(.7)}
 .burst{position:fixed;pointer-events:none;z-index:45;border-radius:999px;background:radial-gradient(circle, rgba(65,243,255,.85), rgba(180,76,255,.20) 50%, transparent 72%);width:8px;height:8px}
 .worldTitle{margin:0 0 10px;font-size:16px;text-transform:uppercase;letter-spacing:1px;color:#fff}
-.authWrap{min-height:100vh;display:grid;place-items:center;padding:18px;position:relative;z-index:2}
-.authBox{width:min(520px,100%);padding:22px;border-radius:24px;background:linear-gradient(180deg,rgba(13,18,46,.96),rgba(8,12,30,.98));border:1px solid rgba(65,243,255,.20);box-shadow:var(--shadow)}
-.authBox h1{margin:0 0 8px;font-size:34px}
-.authBox p{margin:0 0 16px;color:var(--muted);line-height:1.5}
-.hidden{display:none !important}
-.userChip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(50,245,156,.12);border:1px solid rgba(50,245,156,.22);font-weight:800}
 @media (max-width:1100px){.hero{grid-template-columns:1fr}.topStats{grid-template-columns:repeat(2,1fr)}.chapterGrid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
-@media (max-width:720px){.app{padding:10px}.topStats,.row2{grid-template-columns:1fr}.headerTitle{font-size:28px}.bigLevel{font-size:48px}.timer{font-size:52px}.authBox h1{font-size:28px}}
+@media (max-width:720px){.app{padding:10px}.topStats,.row2{grid-template-columns:1fr}.headerTitle{font-size:28px}.bigLevel{font-size:48px}.timer{font-size:52px}}
 </style>
 </head>
 <body>
@@ -93,29 +87,11 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
 <div class="toastWrap" id="toastWrap"></div>
 <div class="modal" id="modal"><div class="modalBox"><h3 id="modalTitle">Notice</h3><p id="modalText"></p><div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn good" id="modalOk">Okay</button></div></div></div>
 
-<div id="authScreen" class="authWrap">
-  <div class="authBox">
-    <h1>Hyper Study Runner</h1>
-    <p>Sign in once, and the app will remember your identity and reload your saved progress every time you open the page.</p>
-    <div style="display:grid;gap:10px">
-      <input id="loginName" placeholder="Enter your name">
-      <button class="btn good" id="loginBtn">Continue</button>
-      <button class="btn secondary" id="guestBtn">Play as Guest</button>
-    </div>
-    <div style="margin-top:14px" id="recentUsers"></div>
-  </div>
-</div>
-
-<div id="appScreen" class="app hidden">
+<div class="app">
   <div class="hero">
     <div class="panel">
-      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
-        <div>
-          <div class="headerTitle">Hyper Study Runner V7.6</div>
-          <div class="headerSub">Full feature set restored, with remembered login so each user gets their own persistent profile.</div>
-        </div>
-        <div class="userChip" id="currentUserChip">User</div>
-      </div>
+      <div class="headerTitle">Hyper Study Runner V7.4</div>
+      <div class="headerSub">This version fixes persistence properly. Your progress is saved in localStorage and restored when you reopen the site.</div>
       <div class="topStats">
         <div class="stat"><div class="label">Current Level</div><div class="value" id="levelText">1</div></div>
         <div class="stat"><div class="label">Total XP</div><div class="value" id="xpText">0</div></div>
@@ -134,7 +110,6 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
         <button class="btn secondary" id="exportBtn">Export Save</button>
         <button class="btn secondary" id="importBtn">Import Save</button>
         <button class="btn warn" id="prestigeBtn">Prestige</button>
-        <button class="btn danger" id="logoutBtn">Logout</button>
         <input id="importFile" type="file" accept="application/json" style="display:none">
       </div>
     </div>
@@ -201,14 +176,12 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
     </div>
   </div>
 
-  <div class="footer">V7.6 keeps all features and remembers which user is logged in.</div>
+  <div class="footer">V7.4 restores your saved progress automatically when the page opens.</div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const USER_KEY = 'hyper_study_runner_current_user_v76';
-  const userKey = name => `hyper_study_runner_v76_state_${name.toLowerCase().replace(/[^a-z0-9]+/g,'_')}`;
-
+  const STORAGE_KEY = 'hyper_study_runner_v7_4_state';
   const stages = [
     {world:'World 1: Language & Lore', stage:1, title:'English Literature — I Wandered Lonely as a Cloud', desc:'Poem analysis, figures of speech, themes', reward:120},
     {world:'World 1: Language & Lore', stage:2, title:'English Literature — Grandfather and the Python', desc:'Plot progression, character sketches', reward:120},
@@ -255,33 +228,30 @@ document.addEventListener('DOMContentLoaded', () => {
     pets:{brainbot:false,dragon:false,owl:false,titan:false}, skills:{},
     leaderboard:[{name:'You',xp:0}], examDate:'', settings:{theme:'neon'}, prestige:0, prestigeTokens:0
   });
-  function cleanName(name){ return (name || '').trim().toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
-  function loadCurrentUser(){ return localStorage.getItem(USER_KEY) || ''; }
-  function setCurrentUser(name){ localStorage.setItem(USER_KEY, name); }
 
-  function loadState(name){
+  function loadState(){
     try{
-      const raw = localStorage.getItem(userKey(name));
+      const raw = localStorage.getItem(STORAGE_KEY);
       if(!raw) return defaultState();
       const parsed = JSON.parse(raw);
-      const base = defaultState();
-      return Object.assign(base, parsed, {
+      return Object.assign(defaultState(), parsed, {
         stages: Array.isArray(parsed.stages) ? parsed.stages.slice(0, stages.length).concat(Array(Math.max(0, stages.length - parsed.stages.length)).fill(false)) : Array(stages.length).fill(false),
-        pets: Object.assign(base.pets, parsed.pets || {}),
-        skills: Object.assign(base.skills, parsed.skills || {}),
-        settings: Object.assign(base.settings, parsed.settings || {}),
+        pets: Object.assign(defaultState().pets, parsed.pets || {}),
+        skills: Object.assign(defaultState().skills, parsed.skills || {}),
+        settings: Object.assign(defaultState().settings, parsed.settings || {}),
         leaderboard: Array.isArray(parsed.leaderboard) ? parsed.leaderboard : [{name:'You',xp:0}],
         quests: Array.isArray(parsed.quests) ? parsed.quests : []
       });
-    }catch(e){ return defaultState(); }
+    }catch(e){
+      return defaultState();
+    }
   }
 
-  let currentUser = loadCurrentUser();
-  let state = currentUser ? loadState(currentUser) : defaultState();
+  let state = loadState();
   let timerSec = 1500, timer = null, running = false, paused = false;
   const $ = id => document.getElementById(id);
 
-  function save(){ if(!currentUser) return; localStorage.setItem(userKey(currentUser), JSON.stringify(state)); localStorage.setItem(USER_KEY, currentUser); }
+  function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
   function toast(msg){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; $('toastWrap').appendChild(d); setTimeout(()=>d.remove(),3200); }
   function burst(){ for(let i=0;i<8;i++){ const b=document.createElement('div'); b.className='burst'; const x=Math.random()*window.innerWidth,y=Math.random()*window.innerHeight,s=8+Math.random()*16; b.style.left=x+'px'; b.style.top=y+'px'; b.style.width=b.style.height=s+'px'; document.body.appendChild(b); setTimeout(()=>b.remove(),650); } }
   function modal(t,m){ $('modalTitle').textContent=t; $('modalText').textContent=m; $('modal').classList.add('show'); }
@@ -292,6 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function countStages(){ return state.stages.filter(Boolean).length; }
   function petMult(){ let m=1; if(state.pets.brainbot) m*=1.05; if(state.pets.dragon) m*=1.10; if(state.pets.owl) m*=1.05; return m; }
   function skillQuick(){ return !!state.skills.quick; }
+  function skillRevision(){ return !!state.skills.revision; }
 
   function updateStreak(){
     const today=new Date().toISOString().slice(0,10);
@@ -444,30 +415,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const xp=Math.floor(Math.random()*8000)+Math.floor(state.xp*0.2);
     state.leaderboard.push({name:n,xp}); state.leaderboard.sort((a,b)=>b.xp-a.xp); $('playerName').value=''; save(); render(); toast(`Added ${n}`);
   }
-  function exportSave(){
-    const blob=new Blob([JSON.stringify({user:currentUser,state},null,2)],{type:'application/json'});
-    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`${currentUser}_hyper-study-save.json`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-    toast('Save exported.');
-  }
-  function importSave(ev){
-    const f=ev.target.files&&ev.target.files[0]; if(!f) return;
-    const r=new FileReader();
-    r.onload=e=>{
-      try{
-        const payload=JSON.parse(e.target.result);
-        if(payload.user && payload.state){
-          currentUser = cleanName(payload.user);
-          state = Object.assign(defaultState(), payload.state);
-          setCurrentUser(currentUser);
-          save();
-          bootToApp();
-          render();
-          toast('Save imported.');
-        }else toast('Invalid save file.');
-      }catch(err){ toast('Invalid save file.'); }
-    };
-    r.readAsText(f);
-  }
+  function exportSave(){ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='hyper-study-runner-v7-save.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); toast('Save exported.'); }
+  function importSave(ev){ const f=ev.target.files&&ev.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=e=>{ try{ state=Object.assign(defaultState(), JSON.parse(e.target.result)); save(); render(); toast('Save imported.'); }catch(err){ toast('Invalid save file.'); } }; r.readAsText(f); }
   function buyShop(i){ const item=shopDefs[i]; if(state.coins<item.cost) return toast('Not enough coins.'); state.coins-=item.cost; item.act(); save(); render(); toast(`${item.label} purchased.`); burst(); }
 
   function renderWorlds(){
@@ -491,7 +440,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function render(){
     buildQuests(); checkQuests(); checkAchievements();
-    $('currentUserChip').textContent = currentUser || 'Guest';
     $('levelText').textContent=level(); $('xpText').textContent=state.xp; $('coinText').textContent=state.coins; $('rankText').textContent=rank();
     $('bigLevel').textContent=level(); $('bigRank').textContent=rank(); $('xpNeedText').textContent=`${currentXp()} / 1000`; $('xpBar').style.width=`${currentXp()/10}%`;
     $('chapterStatus').textContent=`${countStages()} / ${stages.length} mastered`; $('sessionText').textContent=state.sessions; $('hoursText').textContent=state.hoursStudied.toFixed(1);
@@ -521,39 +469,37 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(()=>{ root.querySelectorAll('.particle').forEach(p=>{ let x=parseFloat(p.style.left), y=parseFloat(p.style.top); x+=parseFloat(p.dataset.x)*0.04; y-=parseFloat(p.dataset.y)*0.04; if(y<-5){y=105;x=Math.random()*100} if(x>105)x=-5; if(x<-5)x=105; p.style.left=x+'%'; p.style.top=y+'%'; }); },40);
   }
 
-  function bootToApp(){ $('authScreen').classList.add('hidden'); $('appScreen').classList.remove('hidden'); render(); renderTimer(); }
-  function login(name){ const clean = cleanName(name); if(!clean) return toast('Enter a valid name.'); currentUser = clean; setCurrentUser(clean); state = loadState(clean); bootToApp(); toast(`Welcome, ${clean}`); }
-  function logout(){ currentUser = ''; state = defaultState(); localStorage.removeItem(USER_KEY); $('authScreen').classList.remove('hidden'); $('appScreen').classList.add('hidden'); $('loginName').value = ''; }
-
-  const recent = [...new Set(Object.keys(localStorage).filter(k=>k.startsWith('hyper_study_runner_v76_state_')).map(k=>k.replace('hyper_study_runner_v76_state_','')))].slice(0,6);
-  $('recentUsers').innerHTML = recent.length ? `<div class="small">Recent profiles: ${recent.map(u=>`<button class="btn secondary" data-recent="${u}" style="margin:4px 6px 0 0">${u}</button>`).join(' ')}</div>` : '';
-
   $('modalOk').addEventListener('click', closeModal);
   $('themeBtn').addEventListener('click', ()=>{ state.settings.theme=state.settings.theme==='neon'?'midnight':'neon'; document.documentElement.style.setProperty('--cyan', state.settings.theme==='midnight'?'#7afcff':'#41f3ff'); document.documentElement.style.setProperty('--purple', state.settings.theme==='midnight'?'#7a5cff':'#b44cff'); save(); render(); toast(`Theme: ${state.settings.theme}`); });
   $('exportBtn').addEventListener('click', exportSave);
   $('importBtn').addEventListener('click', ()=>$('importFile').click());
   $('importFile').addEventListener('change', importSave);
   $('prestigeBtn').addEventListener('click', prestige);
-  $('logoutBtn').addEventListener('click', logout);
   $('startTimerBtn').addEventListener('click', startTimer);
   $('pauseTimerBtn').addEventListener('click', pauseTimer);
   $('resumeTimerBtn').addEventListener('click', resumeTimer);
   $('resetTimerBtn').addEventListener('click', resetTimer);
   $('saveExamBtn').addEventListener('click', saveExamDate);
   $('addPlayerBtn').addEventListener('click', addPlayer);
-  $('loginBtn').addEventListener('click', ()=>login($('loginName').value));
-  $('guestBtn').addEventListener('click', ()=>login('guest'));
-  $('loginName').addEventListener('keydown', e=>{ if(e.key==='Enter') login($('loginName').value); });
-  $('recentUsers').addEventListener('click', e=>{ const b = e.target.closest('[data-recent]'); if(!b) return; login(b.dataset.recent); });
-  $('worldList').addEventListener('click', e => { const b = e.target.closest('.stageBtn'); if(!b) return; completeStage(Number(b.dataset.index)); });
-  $('shopGrid').addEventListener('click', e => { const b = e.target.closest('.shopBtn'); if(!b) return; buyShop(Number(b.dataset.shop)); });
 
-  window.addEventListener('focus', ()=>{ if(currentUser){ updateStreak(); buildQuests(); checkQuests(); render(); } });
-  setInterval(()=>{ if(currentUser){ renderTimer(); tickExam(); save(); } },1000);
-  setInterval(()=>{ if(currentUser){ updateStreak(); buildQuests(); checkQuests(); save(); } },60000);
+  $('worldList').addEventListener('click', e => {
+    const b = e.target.closest('.stageBtn');
+    if(!b) return;
+    completeStage(Number(b.dataset.index));
+  });
+  $('shopGrid').addEventListener('click', e => {
+    const b = e.target.closest('.shopBtn');
+    if(!b) return;
+    buyShop(Number(b.dataset.shop));
+  });
+
+  window.addEventListener('focus', ()=>{ updateStreak(); buildQuests(); checkQuests(); render(); });
+  setInterval(()=>{ renderTimer(); tickExam(); save(); },1000);
+  setInterval(()=>{ updateStreak(); buildQuests(); checkQuests(); save(); },60000);
 
   initParticles();
-  if(currentUser){ bootToApp(); $('currentUserChip').textContent = currentUser; }
+  render();
+  renderTimer();
 });
 </script>
 </body>
