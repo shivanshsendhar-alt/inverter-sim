@@ -1,253 +1,568 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Inverter Simulator v5</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hyper Study Runner V6 – Exam Domination Update</title>
 <style>
-body {
-    margin: 0;
-    font-family: system-ui;
-    background: #0b1220;
-    color: white;
+:root{
+  --bg:#060816;--panel:#0e1434cc;--cyan:#45f3ff;--blue:#4c7dff;--purple:#b14cff;--green:#30f59a;--muted:#95a8d8;--text:#eaf2ff;
+  --radius:16px;--glass:rgba(255,255,255,0.03)
 }
-
-.header {
-    padding: 16px;
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    background: #111a2e;
-}
-
-.container {
-    max-width: 900px;
-    margin: auto;
-    padding: 15px;
-}
-
-.panel {
-    background: #111a2e;
-    padding: 15px;
-    border-radius: 12px;
-    margin-top: 15px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.card {
-    background: #0f172a;
-    padding: 12px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-input[type="number"] {
-    width: 70px;
-    padding: 6px;
-    border-radius: 6px;
-    border: none;
-}
-
-.big { font-size: 26px; font-weight: bold; }
-.small { font-size: 12px; color: #9ca3af; }
-
-button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 10px;
-    background: #2563eb;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-button:hover { background: #1d4ed8; }
-
-.bar {
-    height: 12px;
-    background: #1f2937;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-top: 10px;
-}
-
-.fill {
-    height: 100%;
-    width: 0%;
-    background: #22c55e;
-}
-
-.warning {
-    color: #f87171;
-    font-weight: bold;
-}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:
+ radial-gradient(circle at 10% 10%, rgba(76,123,255,.07), transparent 20%),
+ radial-gradient(circle at 90% 20%, rgba(177,76,255,.05), transparent 18%),
+ linear-gradient(180deg,#040610 0%, #07102a 60%);color:var(--text);-webkit-font-smoothing:antialiased}
+.app{max-width:1400px;margin:14px auto;padding:14px;position:relative;z-index:2}
+.header{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.logo{padding:12px 16px;border-radius:12px;background:linear-gradient(90deg, rgba(74,125,255,.14), rgba(177,76,255,.06));box-shadow:0 8px 40px rgba(76,123,255,.06);border:1px solid rgba(76,123,255,.12);font-weight:800}
+.title{font-size:20px;font-weight:900}
+.subtitle{color:var(--muted);font-size:13px;margin-left:auto}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.panel{background:linear-gradient(180deg, rgba(12,16,36,.9), rgba(6,8,22,.9));border-radius:var(--radius);padding:14px;border:1px solid rgba(77,124,255,.08);box-shadow:0 8px 40px rgba(69,243,255,.03)}
+.left{grid-column:span 7}
+.right{grid-column:span 5}
+.row{display:flex;gap:12px;align-items:center}
+.stat{flex:1;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(10,14,35,.6), rgba(6,10,26,.6));border:1px solid rgba(74,111,255,.06);text-align:center}
+.stat .label{font-size:12px;color:var(--muted);text-transform:uppercase}
+.stat .value{font-weight:900;font-size:20px;margin-top:6px}
+.progress{height:14px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,.01));overflow:hidden;border:1px solid rgba(77,124,255,.06)}
+.progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--purple));box-shadow:0 6px 22px rgba(69,243,255,.08);transition:width .6s cubic-bezier(.2,.9,.2,1)}
+.level-badge{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(10,14,30,.6), rgba(10,12,20,.6));border:1px solid rgba(69,243,255,.05)}
+.level-num{font-size:48px;font-weight:900;color:var(--cyan);text-shadow:0 4px 28px rgba(69,243,255,.06)}
+.pill{padding:6px 10px;border-radius:999px;background:rgba(69,243,255,.06);border:1px solid rgba(69,243,255,.06);color:var(--cyan);font-weight:700;font-size:12px}
+.chapter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.chapter{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(8,12,30,.6), rgba(6,8,18,.6));border:1px solid rgba(77,124,255,.06)}
+.chapter h3{margin:0;font-size:14px}
+.chapter p{margin:8px 0 0;color:var(--muted);font-size:12px}
+.btn{padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:800}
+.btn.good{background:linear-gradient(90deg, rgba(48,245,154,.9), rgba(20,120,80,.9));color:#021408}
+.btn.neon{background:linear-gradient(90deg,var(--blue),var(--purple));color:white}
+.btn.secondary{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.03);color:var(--muted)}
+.timer{font-weight:900;font-size:48px;text-align:center;color:var(--cyan);text-shadow:0 8px 40px rgba(69,243,255,.05)}
+.timer-small{color:var(--muted);font-size:13px;text-align:center}
+.quest-list,.ach-grid,.pet-grid,.skill-grid,.leader-grid,.shop-grid{display:grid;gap:10px}
+.quest{padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(9,12,26,.6), rgba(6,8,16,.6));border:1px solid rgba(69,243,255,.04)}
+.quest.done{border-color:rgba(48,245,154,.12);box-shadow:0 6px 20px rgba(48,245,154,.03)}
+.small{font-size:12px;color:var(--muted)}
+.toast-wrap{position:fixed;right:18px;top:18px;z-index:40;display:grid;gap:8px}
+.toast{background:linear-gradient(180deg, rgba(8,12,26,.98), rgba(6,8,18,.98));padding:10px 12px;border-radius:10px;border:1px solid rgba(69,243,255,.08);box-shadow:0 10px 40px rgba(69,243,255,.03);font-weight:700}
+.modal{position:fixed;inset:0;display:none;place-items:center;background:linear-gradient(180deg, rgba(0,0,0,.5), rgba(0,0,0,.6));z-index:60}
+.modal.show{display:grid}
+.modal-box{width:min(520px,94%);background:linear-gradient(180deg,#071029,#041026);padding:18px;border-radius:14px;border:1px solid rgba(69,243,255,.06)}
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+.particle{position:absolute;border-radius:50%;filter:blur(1px);opacity:.18}
+.footer{margin-top:16px;text-align:center;color:var(--muted);font-size:12px}
+@media (max-width:1000px){.chapter-grid{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+@media (max-width:600px){.chapter-grid{grid-template-columns:1fr}.level-num{font-size:40px}.timer{font-size:34px}}
 </style>
 </head>
-
 <body>
+<div class="particles" id="particles"></div>
+<div class="toast-wrap" id="toasts"></div>
 
-<div class="header">⚡ Smart Inverter Simulator v5 (LIVE COUNTDOWN)</div>
+<div class="app">
+  <div class="header">
+    <div class="logo">HYPER RUNNER V6</div>
+    <div>
+      <div class="title">Hyper Study Runner V6 – Exam Domination Update</div>
+      <div class="small subtitle">Cyberpunk study simulator — neon UI, progress, quests, pets, skills, and leaderboard.</div>
+    </div>
+    <div class="subtitle">Offline. Single-file. Persistent.</div>
+  </div>
 
-<div class="container">
+  <div class="grid">
+    <div class="panel left">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
+        <div class="level-badge">
+          <div class="level-num" id="bigLevel">1</div>
+          <div class="small" id="bigRank">Rookie</div>
+        </div>
+        <div style="flex:1">
+          <div style="display:flex;gap:10px;margin-bottom:10px">
+            <div class="stat"><div class="label">Level</div><div class="value" id="levelText">1</div></div>
+            <div class="stat"><div class="label">Total XP</div><div class="value" id="xpText">0</div></div>
+            <div class="stat"><div class="label">Coins</div><div class="value" id="coinText">0</div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div class="small">XP Progress</div>
+            <div class="small" id="xpNeedText">0 / 1000</div>
+          </div>
+          <div class="progress"><span id="xpBar"></span></div>
+        </div>
+      </div>
 
-<!-- DEVICES -->
-<div class="panel">
-<h3>Connected Devices</h3>
+      <div style="margin-top:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="small">Syllabus Chapters</div>
+          <div class="pill" id="chapterStatus">0 / 17</div>
+        </div>
+        <div class="chapter-grid" id="chapterGrid"></div>
+      </div>
+    </div>
 
-<div class="grid">
+    <div class="panel right">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Focus Lockdown</strong><div class="small">25-minute Pomodoro sessions</div></div>
+        <div class="pill" id="focusState">Ready</div>
+      </div>
 
-<div class="card">
-<span>Fan (75W each)</span>
-<input type="number" id="fan" value="2" min="0">
+      <div style="text-align:center">
+        <div class="timer" id="timerText">25:00</div>
+        <div class="timer-small" id="timerSub">Large animated countdown</div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+          <button class="btn good" onclick="startTimer()">Start</button>
+          <button class="btn secondary" onclick="pauseTimer()">Pause</button>
+          <button class="btn secondary" onclick="resumeTimer()">Resume</button>
+          <button class="btn" style="background:linear-gradient(90deg,#ff5d8f,#b14cff)" onclick="resetTimer()">Reset</button>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <div style="display:flex;gap:8px">
+          <div class="stat"><div class="label">Sessions</div><div class="value" id="sessionText">0</div></div>
+          <div class="stat"><div class="label">Hours</div><div class="value" id="hoursText">0.0</div></div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div><strong>Daily Quests</strong><div class="small">Auto-refresh each day</div></div>
+            <div class="pill" id="questDateText">Today</div>
+          </div>
+          <div class="quest-list" id="questList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Real Streak</strong><div class="small">Track consecutive study days</div></div>
+        <div class="pill">Persistent</div>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:8px">
+        <div class="stat"><div class="label">Current Streak</div><div class="value" id="streakText">0</div></div>
+        <div class="stat"><div class="label">Best Streak</div><div class="value" id="bestStreakText">0</div></div>
+      </div>
+
+      <div style="margin-top:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div><strong>Exam Countdown</strong><div class="small">Set your exam date</div></div>
+          <div class="pill" id="examSetText">Not set</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input id="examDateInput" type="date" style="flex:1;padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,.04);color:var(--text)">
+          <button class="btn neon" onclick="saveExamDate()">Save</button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="stat"><div class="label">Days</div><div class="value" id="daysLeft">0</div></div>
+          <div class="stat"><div class="label">Time Left</div><div class="value" id="timeLeft">00:00:00</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Achievements</strong><div class="small">Locked / Unlocked</div></div>
+        <div class="pill" id="achCount">0 unlocked</div>
+      </div>
+      <div class="ach-grid" id="achGrid"></div>
+    </div>
+
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Study Pets</strong><div class="small">Unlock via level</div></div>
+        <div class="pill">Bonuses</div>
+      </div>
+      <div class="pet-grid" id="petGrid"></div>
+    </div>
+
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Skill Tree</strong><div class="small">Unlock skills by level</div></div>
+        <div class="pill">Visual</div>
+      </div>
+      <div class="skill-grid" id="skillGrid"></div>
+    </div>
+
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Analytics Dashboard</strong><div class="small">Live study metrics</div></div>
+        <div class="pill">Insights</div>
+      </div>
+      <div style="display:flex;gap:12px">
+        <div class="stat"><div class="label">Chapters</div><div class="value" id="chaptersDoneText">0</div></div>
+        <div class="stat"><div class="label">Completion</div><div class="value" id="completionText">0%</div></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div class="stat"><div class="label">Avg XP / Day</div><div class="value" id="avgXpText">0</div></div>
+        <div class="stat"><div class="label">Total Sessions</div><div class="value" id="sessionsAllText">0</div></div>
+      </div>
+    </div>
+
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Duel Leaderboard</strong><div class="small">Add competitors</div></div>
+        <div class="pill">Rank</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <input id="playerName" placeholder="Player name" style="flex:1;padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,.04);color:var(--text)">
+        <button class="btn neon" onclick="addPlayer()">Add</button>
+      </div>
+      <div class="leader-grid" id="leaderGrid"></div>
+    </div>
+
+    <div class="panel" style="grid-column:span 6">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Coin Shop</strong><div class="small">Spend coins to upgrade</div></div>
+        <div class="pill" id="shopCoins">0 coins</div>
+      </div>
+      <div class="shop-grid" id="shopGrid"></div>
+    </div>
+
+    <div class="panel" style="grid-column:span 12">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><strong>Sound System</strong><div class="small">Play ambient tracks (structural)</div></div>
+        <div class="pill">Audio</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+        <div style="padding:10px;border-radius:10px;background:linear-gradient(180deg,#041022,#021019)"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Lofi</strong><span class="small" id="soundLofiState">Idle</span></div><div style="margin-top:8px"><button class="btn neon" onclick="toggleSound('lofi')">Play/Pause</button> <button class="btn secondary" onclick="stopSound('lofi')">Stop</button></div></div>
+        <div style="padding:10px;border-radius:10px;background:linear-gradient(180deg,#041022,#021019)"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Rain</strong><span class="small" id="soundRainState">Idle</span></div><div style="margin-top:8px"><button class="btn neon" onclick="toggleSound('rain')">Play/Pause</button> <button class="btn secondary" onclick="stopSound('rain')">Stop</button></div></div>
+        <div style="padding:10px;border-radius:10px;background:linear-gradient(180deg,#041022,#021019)"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Library</strong><span class="small" id="soundLibraryState">Idle</span></div><div style="margin-top:8px"><button class="btn neon" onclick="toggleSound('library')">Play/Pause</button> <button class="btn secondary" onclick="stopSound('library')">Stop</button></div></div>
+        <div style="padding:10px;border-radius:10px;background:linear-gradient(180deg,#041022,#021019)"><div style="display:flex;justify-content:space-between;align-items:center"><strong>White Noise</strong><span class="small" id="soundWhiteState">Idle</span></div><div style="margin-top:8px"><button class="btn neon" onclick="toggleSound('white')">Play/Pause</button> <button class="btn secondary" onclick="stopSound('white')">Stop</button></div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">Gamification ranks: Level 1 = Rookie, 5 = Scholar, 10 = Memory Beast, 20 = Focus Machine, 50 = Exam Destroyer, 100 = Exam Titan</div>
 </div>
 
-<div class="card">Infinix Charger (45W) <input type="checkbox" class="d" value="45"></div>
-<div class="card">OnePlus Charger (33W) <input type="checkbox" class="d" value="33"></div>
-<div class="card">iQOO Charger (15W) <input type="checkbox" class="d" value="15"></div>
-<div class="card">Spare Charger (33W) <input type="checkbox" class="d" value="33"></div>
-<div class="card">LED (20W) <input type="checkbox" class="d" value="20"></div>
-<div class="card">Bulb (9W) <input type="checkbox" class="d" value="9"></div>
-<div class="card">WiFi (10W) <input type="checkbox" class="d" value="10"></div>
-
-</div>
-</div>
-
-<!-- CONTROL -->
-<div class="panel">
-<h3>System Control</h3>
-
-<label class="card">
-Safe Mode
-<input type="checkbox" id="safe">
-</label>
-
-<button onclick="calculate()">Calculate Backup Time</button>
-
-<div id="status" class="warning"></div>
-</div>
-
-<!-- OUTPUT -->
-<div class="panel">
-
-<h3>Live System</h3>
-
-<div class="small">Load</div>
-<div class="big" id="load">0W</div>
-
-<div class="small">Battery</div>
-<div class="big" id="battery">1500 Wh</div>
-
-<div class="small">Backup Time</div>
-<div class="big" id="time">--</div>
-
-<div class="small">LIVE Countdown</div>
-<div class="big" id="countdown">--</div>
-
-<div class="bar"><div class="fill" id="bar"></div></div>
-
-</div>
-
-</div>
+<div class="modal" id="modal"><div class="modal-box"><h3 id="modalTitle">Notice</h3><p id="modalText" class="small"></p><div style="text-align:right;margin-top:12px"><button class="btn good" onclick="closeModal()">OK</button></div></div></div>
 
 <script>
+/* ========= Persistent State & Defaults ========= */
+const STORAGE_KEY = 'hyper_study_runner_v6_state_v1';
+const defaultState = () => ({
+  xp:0, coins:0, chapters:Array(17).fill(false),
+  sessions:0, hoursStudied:0,
+  streak:0, bestStreak:0, lastStudyDate:'',
+  achievements:{}, quests:[], questDate:'',
+  pets:{brainbot:false,dragon:false,owl:false,titan:false},
+  skills:{quick:false,memory:false,focus:false,revision:false,destroyer:false},
+  leaderboard:[{name:'You',xp:0,level:1}], examDate:'', sounds:{lofi:false,rain:false,library:false,white:false}
+});
+let state = loadState();
 
-let batteryWh = 1500;
-let baseBattery = 1500;
+/* ========= Static Data ========= */
+const chapters = [
+ 'Algebra Core','Geometry Grid','Trigonometry Pulse','Calculus Boost','Statistics Signal','Physics Motion','Chemistry Bonds','Biology Systems','English Grammar','Essay Power','Computer Basics','Programming Logic','History Timeline','Geography Atlas','Economics Flow','General Knowledge','Revision Final Boss'
+];
 
-let load = 0;
-let remainingSeconds = 0;
-let timerStarted = false;
+const achievementsDef = [
+  ['First Blood','Complete 1 chapter',()=>countChapters()>=1,50],
+  ['Scholar','Reach level 5',()=>level()>=5,100],
+  ['Beast Mode','Complete 5 chapters',()=>countChapters()>=5,150],
+  ['Focus Machine','Finish 5 focus sessions',()=>state.sessions>=5,150],
+  ['Midterm Destroyer','Reach 5000 XP',()=>state.xp>=5000,200],
+  ['Study Addict','Maintain 7-day streak',()=>state.streak>=7,200],
+  ['Exam Titan','Reach level 100',()=>level()>=100,500]
+];
 
-function getLoad() {
+const petsDef = [
+  ['Brain Bot',3,'XP x1.05'],
+  ['Study Dragon',10,'XP x1.10'],
+  ['Quantum Owl',20,'Focus Bonus'],
+  ['Exam Titan',50,'High Reward']
+];
 
-    let total = 0;
+const skillsDef = [
+  ['Quick Learner',2],['Memory Beast',5],['Focus Machine',10],['Revision Master',20],['Exam Destroyer',50]
+];
 
-    let fans = Number(document.getElementById("fan").value || 0);
-    total += fans * 75;
+const shopDef = [
+  {id:'xp_booster',cost:120,label:'XP Booster',desc:'Add 500 XP',action:()=>addXp(500,true)},
+  {id:'focus_booster',cost:150,label:'Focus Booster',desc:'Grant 1 session',action:()=>awardSession(true)},
+  {id:'pet_food',cost:100,label:'Pet Food',desc:'Unlock next pet',action:unlockNextPet},
+  {id:'revision_scroll',cost:180,label:'Revision Scroll',desc:'Complete a random chapter',action:completeRandomChapter}
+];
 
-    document.querySelectorAll(".d").forEach(d => {
-        if (d.checked) total += Number(d.value);
-    });
+const rankTitles = [
+  ['Exam Titan',100],['Exam Destroyer',50],['Focus Machine',20],['Memory Beast',10],['Scholar',5],['Rookie',1]
+];
 
-    return total;
+/* ========= Storage Helpers ========= */
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultState();
+    const s = JSON.parse(raw);
+    return Object.assign(defaultState(), s);
+  }catch(e){console.error(e);return defaultState();}
+}
+function saveState(){localStorage.setItem(STORAGE_KEY, JSON.stringify(state));}
+
+/* ========= Basic Calculations ========= */
+function level(){ return Math.floor(state.xp/1000)+1; }
+function currentLevelXp(){ return state.xp % 1000; }
+function nextLevelXp(){ return (level()*1000); }
+function rank(){ for(const [name,req] of rankTitles) if(level()>=req) return name; return 'Rookie'; }
+function countChapters(){ return state.chapters.filter(Boolean).length; }
+
+/* ========= Notifications & Modal ========= */
+function toast(msg, time=4200){
+  const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(()=>t.remove(), time);
+}
+function showModal(title, text){ document.getElementById('modalTitle').textContent=title; document.getElementById('modalText').textContent=text; document.getElementById('modal').classList.add('show'); }
+function closeModal(){ document.getElementById('modal').classList.remove('show'); }
+
+/* ========= XP, Coins, Leaderboard ========= */
+function addXp(amount, silent=false){
+  const oldLevel = level();
+  const multiplier = petXpMultiplier();
+  const final = Math.round(amount * multiplier);
+  state.xp += final;
+  if(level() > oldLevel){
+    toast(`Level up! Reached Level ${level()}`, 5000);
+    showModal('Level Up', `You reached Level ${level()} — rank: ${rank()}`);
+  }
+  if(!silent) toast(`+${final} XP`);
+  updateLeaderboardFor('You', state.xp);
+  saveState(); render();
+}
+function addCoins(amount){ state.coins += amount; saveState(); render(); }
+function updateLeaderboardFor(name,xp){
+  const p = state.leaderboard.find(pl=>pl.name===name);
+  if(p){p.xp = xp; p.level = Math.floor(xp/1000)+1;}
+  else state.leaderboard.push({name:name,xp:xp,level:Math.floor(xp/1000)+1});
+  state.leaderboard.sort((a,b)=>b.xp-a.xp);
+  saveState();
 }
 
-function calculate() {
-
-    load = getLoad();
-
-    if (load <= 0) {
-        document.getElementById("status").innerText = "Idle";
-        document.getElementById("time").innerText = "--";
-        document.getElementById("countdown").innerText = "--";
-        return;
-    }
-
-    let safeMode = document.getElementById("safe").checked;
-
-    let efficiency = safeMode ? 0.78 : 0.88;
-    let inverterLoss = 0.95;
-
-    let usableWh = batteryWh * efficiency * inverterLoss;
-
-    let backupHours = usableWh / load;
-
-    remainingSeconds = backupHours * 3600;
-    timerStarted = true;
-
-    document.getElementById("load").innerText = load.toFixed(1) + "W";
-    document.getElementById("time").innerText = backupHours.toFixed(2) + " hrs";
-
-    document.getElementById("status").innerText =
-        backupHours > 5 ? "🟢 Excellent" :
-        backupHours > 2 ? "🟡 Moderate" : "🔴 Low";
-
-    updateBar();
+/* ========= Chapters ========= */
+function masterChapter(i){
+  if(state.chapters[i]) return toast('Chapter already mastered.');
+  state.chapters[i] = true;
+  updateStreak();
+  addXp(140); addCoins(20);
+  toast(`Mastered: ${chapters[i]}`, 3200);
+  checkAchievements();
+  autoQuestProgress('chapter');
+  saveState(); render();
+}
+function completeRandomChapter(){
+  const idx = state.chapters.findIndex(v=>!v);
+  if(idx===-1) return toast('All chapters mastered.');
+  masterChapter(idx);
 }
 
-function updateBar() {
-    let percent = (batteryWh / baseBattery) * 100;
-    document.querySelector(".fill").style.width = percent + "%";
-    document.getElementById("battery").innerText = batteryWh.toFixed(0) + " Wh";
+/* ========= Pomodoro Timer ========= */
+let timerSeconds = 25*60, timerInterval = null, timerRunning=false, timerPaused=false;
+function formatTime(s){ const m = Math.floor(s/60); const sec = s%60; return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`; }
+function updateTimerDisplay(){ document.getElementById('timerText').textContent = formatTime(timerSeconds); }
+function startTimer(){
+  if(timerRunning) return;
+  timerRunning = true; timerPaused = false; document.getElementById('focusState').textContent='Running';
+  timerInterval = setInterval(()=>{
+    timerSeconds--;
+    updateTimerDisplay();
+    if(timerSeconds<=0){
+      clearInterval(timerInterval); timerRunning=false; timerPaused=false; timerSeconds = 25*60; updateTimerDisplay();
+      awardSession(); toast('Pomodoro session complete — rewards granted!', 5000); showModal('Session Complete','You earned XP and coins for your focus session.');
+    }
+  },1000);
+}
+function pauseTimer(){ if(!timerRunning) return; clearInterval(timerInterval); timerRunning=false; timerPaused=true; document.getElementById('focusState').textContent='Paused'; }
+function resumeTimer(){ if(timerRunning || !timerPaused) return; startTimer(); }
+function resetTimer(){ clearInterval(timerInterval); timerRunning=false; timerPaused=false; timerSeconds = 25*60; updateTimerDisplay(); document.getElementById('focusState').textContent='Ready'; }
+
+/* ========= Session & Streak ========= */
+function awardSession(fromShop=false){
+  state.sessions += 1;
+  state.hoursStudied += 25/60;
+  updateStreak();
+  const xpGain = Math.round(90 * petXpMultiplier());
+  addXp(xpGain);
+  if(!fromShop) addCoins(10);
+  checkAchievements();
+  autoQuestProgress('session');
+  saveState(); render();
+}
+function updateStreak(){
+  const today = new Date().toISOString().slice(0,10);
+  if(!state.lastStudyDate){ state.streak = 1; state.bestStreak = Math.max(state.bestStreak,1); state.lastStudyDate = today; return; }
+  const last = new Date(state.lastStudyDate+'T00:00:00');
+  const diffDays = Math.round((new Date(today+'T00:00:00') - last)/86400000);
+  if(diffDays===0) return;
+  if(diffDays===1) state.streak += 1;
+  else state.streak = 1;
+  state.bestStreak = Math.max(state.bestStreak, state.streak);
+  state.lastStudyDate = today;
 }
 
-// LIVE countdown engine
-setInterval(() => {
-
-    if (!timerStarted || load <= 0) {
-        document.getElementById("countdown").innerText = "--";
-        return;
+/* ========= Quests ========= */
+function questPool(){
+  return [
+    {id:'q_ch1',name:'Complete 1 chapter',type:'chapter',target:1,rewardXp:180,rewardCoins:35,progress:0,done:false},
+    {id:'q_sess2',name:'Complete 2 focus sessions',type:'session',target:2,rewardXp:220,rewardCoins:45,progress:0,done:false},
+    {id:'q_xp500',name:'Earn 500 XP',type:'xp',target:500,rewardXp:200,rewardCoins:50,progress:0,done:false}
+  ];
+}
+function buildQuests(){
+  const today = new Date().toISOString().slice(0,10);
+  if(state.questDate === today && state.quests.length) return;
+  state.questDate = today; state.quests = questPool();
+  saveState();
+}
+function autoQuestProgress(type){
+  buildQuests();
+  state.quests.forEach(q=>{
+    if(q.done) return;
+    if(q.type === 'xp'){
+      if(state.xp >= q.target){ q.done = true; rewardQuest(q); }
+    } else {
+      if(q.type === type) q.progress = Math.min(q.target, q.progress + 1);
+      if(q.progress >= q.target){ q.done = true; rewardQuest(q); }
     }
+  });
+  saveState(); render();
+}
+function rewardQuest(q){
+  addXp(q.rewardXp, true); addCoins(q.rewardCoins);
+  toast(`Quest complete: ${q.name}`, 4200);
+}
 
-    if (remainingSeconds > 0) {
-        remainingSeconds -= 1;
-        batteryWh -= load / 3600; // real drain per second
-        if (batteryWh < 0) batteryWh = 0;
+/* ========= Achievements ========= */
+function checkAchievements(){
+  achievementsDef.forEach(([name,desc,cond,reward])=>{
+    if(cond() && !state.achievements[name]){
+      state.achievements[name] = true;
+      addXp(reward, true); addCoins(40);
+      toast(`Achievement Unlocked: ${name}`, 4500);
+      showModal('Achievement Unlocked', `${name} — ${desc}`);
     }
+  });
+}
 
-    let h = Math.floor(remainingSeconds / 3600);
-    let m = Math.floor((remainingSeconds % 3600) / 60);
-    let s = Math.floor(remainingSeconds % 60);
+/* ========= Pets & Skills ========= */
+function petXpMultiplier(){
+  let m = 1;
+  if(state.pets.brainbot) m *= 1.05;
+  if(state.pets.dragon) m *= 1.10;
+  return m;
+}
+function unlockNextPet(){
+  const keys = ['brainbot','dragon','owl','titan'];
+  const idx = keys.findIndex(k=>!state.pets[k]);
+  if(idx === -1) return toast('All pets unlocked.');
+  const req = [idx]; [geeksforgeeks](https://www.geeksforgeeks.org/html/how-to-display-play-pause-and-mute-buttons-in-html5/)
+  if(level() < req) return toast(`Requires Level ${req} to unlock.`);
+  state.pets[keys[idx]] = true; saveState(); toast(`Unlocked: ${petsDef[idx][0]}`); showModal('Pet Unlocked', `${petsDef[idx][0]} provides: ${petsDef[idx] [rxdb](https://rxdb.info/articles/localstorage.html)}`);
+}
 
-    document.getElementById("countdown").innerText =
-        h + "h " + m + "m " + s + "s";
+/* ========= Leaderboard ========= */
+function addPlayer(){
+  const name = (document.getElementById('playerName').value||'').trim();
+  if(!name) return toast('Enter a player name.');
+  const xp = Math.floor(Math.random()*8000);
+  state.leaderboard.push({name, xp, level: Math.floor(xp/1000)+1});
+  state.leaderboard.sort((a,b)=>b.xp-a.xp);
+  document.getElementById('playerName').value='';
+  saveState(); render();
+}
 
-    updateBar();
+/* ========= Shop ========= */
+function buyShop(idx){
+  const item = shopDef[idx];
+  if(state.coins < item.cost) return toast('Not enough coins.');
+  state.coins -= item.cost;
+  item.action();
+  toast(`${item.label} purchased.`, 3000);
+  saveState(); render();
+}
 
-}, 1000);
+/* ========= Exam Countdown ========= */
+function saveExamDate(){
+  const d = document.getElementById('examDateInput').value;
+  state.examDate = d;
+  saveState(); render();
+  toast('Exam date saved.');
+}
+function tickExam(){
+  if(!state.examDate){ document.getElementById('daysLeft').textContent='0'; document.getElementById('timeLeft').textContent='00:00:00'; document.getElementById('examSetText').textContent='Not set'; return; }
+  const t = new Date(state.examDate+'T00:00:00').getTime() - Date.now();
+  const s = Math.max(0, Math.floor(t/1000));
+  const days = Math.floor(s/86400);
+  const hours = Math.floor((s%86400)/3600);
+  const minutes = Math.floor((s%3600)/60);
+  const seconds = s%60;
+  document.getElementById('daysLeft').textContent = days;
+  document.getElementById('timeLeft').textContent = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+  document.getElementById('examSetText').textContent = 'Exam Set';
+}
 
-</script>
+/* ========= Sound System (structural) ========= */
+function toggleSound(name){
+  state.sounds[name] = !state.sounds[name];
+  saveState(); render(); toast(`${name} ${state.sounds[name]?'playing':'paused'}`);
+}
+function stopSound(name){
+  state.sounds[name] = false; saveState(); render(); toast(`${name} stopped`);
+}
 
-</body>
-</html>
+/* ========= Render UI ========= */
+function render(){
+  buildQuests(); checkAchievements();
+  document.getElementById('levelText').textContent = level();
+  document.getElementById('xpText').textContent = Math.floor(state.xp);
+  document.getElementById('coinText').textContent = Math.floor(state.coins);
+  document.getElementById('bigLevel').textContent = level();
+  document.getElementById('bigRank').textContent = rank();
+  const cur = currentLevelXp();
+  document.getElementById('xpNeedText').textContent = `${cur} / 1000`;
+  document.getElementById('xpBar').style.width = `${(cur/1000)*100}%`;
+  document.getElementById('chapterStatus').textContent = `${countChapters()} / ${chapters.length}`;
+  document.getElementById('sessionText').textContent = state.sessions;
+  document.getElementById('hoursText').textContent = state.hoursStudied.toFixed(1);
+  document.getElementById('streakText').textContent = state.streak;
+  document.getElementById('bestStreakText').textContent = state.bestStreak;
+  document.getElementById('chaptersDoneText').textContent = countChapters();
+  document.getElementById('completionText').textContent = `${Math.round(countChapters()/chapters.length*100)}%`;
+  document.getElementById('avgXpText').textContent = state.xp ? Math.round(state.xp / Math.max(1, daysSinceFirstStudy())) : 0;
+  document.getElementById('sessionsAllText').textContent = state.sessions;
+  document.getElementById('achCount').textContent = `${Object.values(state.achievements).filter(Boolean).length} unlocked`;
+  document.getElementById('shopCoins').textContent = `${state.coins} coins`;
+  document.getElementById('questDateText').textContent = state.questDate || 'Today';
+  document.getElementById('soundLofiState').textContent = state.sounds.lofi ? 'Playing' : 'Idle';
+  document.getElementById('soundRainState').textContent = state.sounds.rain ? 'Playing' : 'Idle';
+  document.getElementById('soundLibraryState').textContent = state.sounds.library ? 'Playing' : 'Idle';
+  document.getElementById('soundWhiteState').textContent = state.sounds.white ? 'Playing' : 'Idle';
+
+  // Quests
+  document.getElementById('questList').innerHTML = state.quests.map(q=>{
+    const progressText = q.type === 'xp' ? `${Math.min(state.xp,q.target)}/${q.target}` : `${q.progress}/${q.target}`;
+    return `<div class="quest ${q.done?'done':''}"><div style="display:flex;justify-content:space-between;align-items:center"><strong>${q.name}</strong><span class="small">+${q.rewardXp} XP • +${q.rewardCoins} coins</span></div><div class="small" style="margin-top:6px">${q.name} — progress: ${progressText}${q.done?' • Completed':''}</div></div>`;
+  }).join('');
+
+  // Chapters
+  document.getElementById('chapterGrid').innerHTML = chapters.map((c,i)=>`
+    <div class="chapter ${state.chapters[i] ? 'done' : ''}">
+      <h3>${String(i+1).padStart(2,'0')}. ${c}</h3>
+      <p>${state.chapters[i] ? 'Mastered — rewards claimed.' : 'Master this chapter to gain XP, coins, and progress.'}</p>
+      <div style="margin-top:8px"><button class="btn ${state.chapters[i] ? 'secondary' : 'good'}" onclick="masterChapter(${i})">${state.chapters[i]?'MASTERED':'MASTER CHAPTER'}</button></div>
+    </div>
+  `).join('');
+
+  // Achievements
+  document.getElementById('achGrid').innerHTML = achievementsDef.map(([name,desc,cond,rew])=>`
+    <div class="quest ${state.achievements[name] ? '' : 'locked'}">
+      <div style="display:flex;justify-content:space-between"><strong>${name}</strong><span class="small">+${rew} XP</span></div>
+      <div class="small" style="margin-top:6px">${desc}</div>
+      <div class="small" style="margin-top:6px">${state.achievements[name] ? 'Unlocked' : 'Locked'}</div>
+    </div>
+  `).join('');
+
+  // Pets
+  document.getElementBy
