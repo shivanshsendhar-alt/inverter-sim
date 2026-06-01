@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Hyper Study Runner V7.2</title>
+<title>Hyper Study Runner V7.3</title>
 <style>
 :root{
   --bg:#050713; --panel:rgba(13,18,46,.92); --panel2:rgba(8,12,30,.98);
@@ -54,8 +54,8 @@ background-size:44px 44px,44px 44px}
 .btn.danger{background:linear-gradient(180deg,rgba(255,104,143,.98),rgba(151,39,80,.98))}
 .btn:active{transform:translateY(1px)}
 input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.96);border:1px solid rgba(108,138,255,.16);color:var(--text);outline:none}
-.chapterGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.chapter{padding:14px;border-radius:16px;background:linear-gradient(180deg,rgba(10,15,36,.95),rgba(7,9,20,.98));border:1px solid rgba(108,138,255,.14);position:relative;min-height:155px}
+.chapterGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.chapter{padding:14px;border-radius:16px;background:linear-gradient(180deg,rgba(10,15,36,.95),rgba(7,9,20,.98));border:1px solid rgba(108,138,255,.14);position:relative;min-height:182px}
 .chapter.completed{border-color:rgba(50,245,156,.32)}
 .chapter.completed::after{content:"✓";position:absolute;top:10px;right:10px;color:var(--green);font-weight:900}
 .chapter h3{margin:0;font-size:14px}
@@ -64,7 +64,7 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
 .btnRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .timerWrap{display:grid;place-items:center;text-align:center;padding:16px}
 .timer{font-size:clamp(44px,7vw,92px);font-weight:950;color:#fff;text-shadow:0 0 12px rgba(65,243,255,.66),0 0 24px rgba(180,76,255,.28);letter-spacing:2px}
-.quests,.achievements,.pets,.skills,.leaders,.shop,.audioGrid{display:grid;gap:10px}
+.quests,.achievements,.pets,.skills,.leaders,.shop{display:grid;gap:10px}
 .quest,.achievement,.pet,.skill,.leader,.shopItem{padding:12px;border-radius:14px;background:linear-gradient(180deg,rgba(9,13,30,.95),rgba(6,9,18,.98));border:1px solid rgba(108,138,255,.10)}
 .quest.done{border-color:rgba(50,245,156,.24)}
 .quest .meta,.skill .meta,.pet .meta{margin-top:6px;color:var(--muted);font-size:12px}
@@ -78,8 +78,9 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
 .footer{margin:16px 0 8px;color:var(--muted);font-size:12px;text-align:center}
 .locked{opacity:.58;filter:saturate(.7)}
 .burst{position:fixed;pointer-events:none;z-index:45;border-radius:999px;background:radial-gradient(circle, rgba(65,243,255,.85), rgba(180,76,255,.20) 50%, transparent 72%);width:8px;height:8px}
-@media (max-width:1100px){.hero{grid-template-columns:1fr}.topStats{grid-template-columns:repeat(2,1fr)}.chapterGrid{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
-@media (max-width:720px){.app{padding:10px}.chapterGrid,.topStats,.row2{grid-template-columns:1fr}.headerTitle{font-size:28px}.bigLevel{font-size:48px}.timer{font-size:52px}}
+.worldTitle{margin:0 0 10px;font-size:16px;text-transform:uppercase;letter-spacing:1px;color:#fff}
+@media (max-width:1100px){.hero{grid-template-columns:1fr}.topStats{grid-template-columns:repeat(2,1fr)}.chapterGrid{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+@media (max-width:720px){.app{padding:10px}.topStats,.row2{grid-template-columns:1fr}.headerTitle{font-size:28px}.bigLevel{font-size:48px}.timer{font-size:52px}}
 </style>
 </head>
 <body>
@@ -90,8 +91,8 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
 <div class="app">
   <div class="hero">
     <div class="panel">
-      <div class="headerTitle">Hyper Study Runner V7.2</div>
-      <div class="headerSub">Every section below is now real data-driven UI. Chapters, quests, skills, pets, leaderboard, and shop all render from arrays and respond to clicks.</div>
+      <div class="headerTitle">Hyper Study Runner V7.3</div>
+      <div class="headerSub">Your exact 17 stages are now built into the app. Completing any stage updates XP, coins, quests, streak, and save data.</div>
       <div class="topStats">
         <div class="stat"><div class="label">Current Level</div><div class="value" id="levelText">1</div></div>
         <div class="stat"><div class="label">Total XP</div><div class="value" id="xpText">0</div></div>
@@ -103,7 +104,6 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
         <div class="progress"><span id="xpBar"></span></div>
       </div>
     </div>
-
     <div class="panel levelOrb">
       <div class="orb"><div><div class="bigLevel" id="bigLevel">1</div><div class="bigRank" id="bigRank">Rookie</div></div></div>
       <div class="btnRow" style="justify-content:center;margin-top:12px">
@@ -117,9 +117,9 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
   </div>
 
   <div class="grid">
-    <div class="panel section" style="grid-column:span 7">
-      <div class="sectionHead"><div><h2>Syllabus Chapters</h2><div class="small">Click a chapter card or the button to master it.</div></div><span class="pill" id="chapterStatus">0 / 17 mastered</span></div>
-      <div class="chapterGrid" id="chapterGrid"></div>
+    <div class="panel section" style="grid-column:span 12">
+      <div class="sectionHead"><div><h2>Syllabus Chapters</h2><div class="small">Click a stage card or button to mark it complete.</div></div><span class="pill" id="chapterStatus">0 / 17 mastered</span></div>
+      <div id="worldList"></div>
     </div>
 
     <div class="panel section" style="grid-column:span 5">
@@ -136,7 +136,7 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
       <div class="row2"><div class="stat"><div class="label">Study Sessions</div><div class="value" id="sessionText">0</div></div><div class="stat"><div class="label">Hours Studied</div><div class="value" id="hoursText">0.0</div></div></div>
     </div>
 
-    <div class="panel section" style="grid-column:span 6">
+    <div class="panel section" style="grid-column:span 7">
       <div class="sectionHead"><div><h2>Daily Quests</h2><div class="small">Three quests refresh daily with progress bars</div></div><span class="pill" id="questDateText">Today</span></div>
       <div class="quests" id="questList"></div>
     </div>
@@ -175,42 +175,35 @@ input{width:100%;padding:11px 12px;border-radius:12px;background:rgba(7,10,22,.9
       <div class="sectionHead"><div><h2>Coin Shop</h2><div class="small">Spend coins on boosts</div></div><span class="pill" id="shopCoins">0 coins</span></div>
       <div class="shop" id="shopGrid"></div>
     </div>
-
-    <div class="panel section" style="grid-column:span 6">
-      <div class="sectionHead"><div><h2>Audio Controls</h2><div class="small">Buttons toggle simple playback state</div></div><span class="pill">Ready</span></div>
-      <div class="audioGrid" style="grid-template-columns:repeat(2,1fr)">
-        <div class="shopItem"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Lofi</strong><span class="small" id="soundLofiState">Idle</span></div><div class="btnRow"><button class="btn secondary soundBtn" data-sound="lofi">Play/Pause</button><button class="btn danger stopBtn" data-sound="lofi">Stop</button></div></div>
-        <div class="shopItem"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Rain</strong><span class="small" id="soundRainState">Idle</span></div><div class="btnRow"><button class="btn secondary soundBtn" data-sound="rain">Play/Pause</button><button class="btn danger stopBtn" data-sound="rain">Stop</button></div></div>
-        <div class="shopItem"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Library</strong><span class="small" id="soundLibraryState">Idle</span></div><div class="btnRow"><button class="btn secondary soundBtn" data-sound="library">Play/Pause</button><button class="btn danger stopBtn" data-sound="library">Stop</button></div></div>
-        <div class="shopItem"><div style="display:flex;justify-content:space-between;align-items:center"><strong>White Noise</strong><span class="small" id="soundWhiteState">Idle</span></div><div class="btnRow"><button class="btn secondary soundBtn" data-sound="white">Play/Pause</button><button class="btn danger stopBtn" data-sound="white">Stop</button></div></div>
-      </div>
-    </div>
   </div>
 
-  <div class="footer">V7.2 adds real chapter lists, daily quests, skill nodes, pets, leaderboard rows, and click-driven progress updates.</div>
+  <div class="footer">V7.3 uses your exact curriculum, grouped into four worlds, with real clickable completion logic.</div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const STORAGE_KEY = (location.pathname || '/hyper-study-runner-v7') + '::hyper_study_runner_v7_state';
-  const chapters = [
-    {name:'Algebra Core', reward:120, desc:'Variables, equations, and fast solving.'},
-    {name:'Geometry Grid', reward:120, desc:'Angles, triangles, circles, and proofs.'},
-    {name:'Trigonometry Pulse', reward:130, desc:'Ratios, identities, and wave thinking.'},
-    {name:'Calculus Boost', reward:150, desc:'Limits, derivatives, and integrals.'},
-    {name:'Statistics Signal', reward:110, desc:'Mean, median, probability, and charts.'},
-    {name:'Physics Motion', reward:140, desc:'Speed, force, energy, and motion.'},
-    {name:'Chemistry Bonds', reward:140, desc:'Atoms, reactions, and periodic logic.'},
-    {name:'Biology Systems', reward:120, desc:'Cells, organs, and human systems.'},
-    {name:'English Grammar', reward:100, desc:'Tenses, syntax, and sentence power.'},
-    {name:'Essay Power', reward:130, desc:'Writing structure and argument flow.'},
-    {name:'Computer Basics', reward:110, desc:'Files, internet, and system literacy.'},
-    {name:'Programming Logic', reward:170, desc:'Loops, conditions, and problem solving.'},
-    {name:'History Timeline', reward:100, desc:'Events, causes, and sequences.'},
-    {name:'Geography Atlas', reward:100, desc:'Maps, climate, and regions.'},
-    {name:'Economics Flow', reward:120, desc:'Markets, demand, and supply.'},
-    {name:'General Knowledge', reward:120, desc:'Current affairs and broad recall.'},
-    {name:'Revision Final Boss', reward:200, desc:'Ultimate mixed revision challenge.'}
+  const stages = [
+    {world:'World 1: Language & Lore', stage:1, title:'English Literature — I Wandered Lonely as a Cloud', desc:'Poem analysis, figures of speech, themes', reward:120},
+    {world:'World 1: Language & Lore', stage:2, title:'English Literature — Grandfather and the Python', desc:'Plot progression, character sketches', reward:120},
+    {world:'World 1: Language & Lore', stage:3, title:'English Language — Essay, Notice Writing, and Whole Copy Structural Revision', desc:'Writing formats, structure, and revision practice', reward:130},
+    {world:'World 1: Language & Lore', stage:4, title:'Hindi — Matrabhumi', desc:'Core text analysis and stanza meanings', reward:120},
+    {world:'World 1: Language & Lore', stage:5, title:'Hindi — Bus Ki Yatra + Complete Grammar Notebook Review', desc:'Story review and grammar notebook revision', reward:130},
+
+    {world:'World 2: Logic & Digital Architecture', stage:6, title:'Mathematics — Rational Numbers', desc:'Properties, operations, and number lines', reward:140},
+    {world:'World 2: Logic & Digital Architecture', stage:7, title:'Mathematics — Exponents', desc:'Laws of exponents and scientific notation conversions', reward:150},
+    {world:'World 2: Logic & Digital Architecture', stage:8, title:'Computer Science — Fundamentals of Java', desc:'Syntax, variables, data types, basic logic', reward:160},
+    {world:'World 2: Logic & Digital Architecture', stage:9, title:'Computer Science — Spreadsheet', desc:'Formulas, functions, cell referencing, and data sorting', reward:150},
+
+    {world:'World 3: The Natural Sciences', stage:10, title:'Physics — Physical Quantities and Measurement', desc:'Units, density calculations, instruments', reward:150},
+    {world:'World 3: The Natural Sciences', stage:11, title:'Chemistry — Matter', desc:'States of matter, kinetic theory, phase changes', reward:150},
+    {world:'World 3: The Natural Sciences', stage:12, title:'Chemistry — Elements, Mixtures, and Compounds', desc:'Chemical formulas, separation techniques', reward:160},
+    {world:'World 3: The Natural Sciences', stage:13, title:'Biology — Human Body: The Circulatory System', desc:'Heart anatomy, blood vessels, double circulation', reward:160},
+
+    {world:'World 4: Civilization, Systems & Power', stage:14, title:'Geography — Urbanisation', desc:'Causes, impacts of rapid urban growth, smart city concepts', reward:140},
+    {world:'World 4: Civilization, Systems & Power', stage:15, title:'Geography — Migration', desc:'Push and pull factors, economic and social consequences', reward:140},
+    {world:'World 4: Civilization, Systems & Power', stage:16, title:'History & Civics — The Union Legislature', desc:'Lok Sabha, Rajya Sabha, law-making structures', reward:150},
+    {world:'World 4: Civilization, Systems & Power', stage:17, title:'History & Civics — Growth of British Power in Bengal', desc:'Battle of Plassey, Battle of Buxar', reward:170}
   ];
   const skillDefs = [
     {name:'Quick Learner', req:2, desc:'+5% XP gain'},
@@ -231,49 +224,34 @@ document.addEventListener('DOMContentLoaded', () => {
     {label:'XP Booster',cost:120,desc:'+500 XP',act:()=>addXp(500,true)},
     {label:'Focus Booster',cost:150,desc:'+1 session',act:()=>awardSession(true)},
     {label:'Pet Food',cost:100,desc:'Unlock next pet',act:unlockNextPet},
-    {label:'Revision Scroll',cost:180,desc:'Complete 1 random chapter',act:completeRandomChapter}
+    {label:'Revision Scroll',cost:180,desc:'Complete 1 random stage',act:completeRandomStage}
   ];
-
   const defaultState = () => ({
-    xp:0, coins:0, chapters:Array(17).fill(false), sessions:0, hoursStudied:0,
+    xp:0, coins:0, stages:Array(stages.length).fill(false), sessions:0, hoursStudied:0,
     streak:0, bestStreak:0, lastStudyDate:'', achievements:{}, quests:[], questDate:'',
     pets:{brainbot:false,dragon:false,owl:false,titan:false}, skills:{},
-    leaderboard:[{name:'You',xp:0}], examDate:'', settings:{theme:'neon'}, prestige:0, prestigeTokens:0,
-    sounds:{lofi:false,rain:false,library:false,white:false}
+    leaderboard:[{name:'You',xp:0}], examDate:'', settings:{theme:'neon'}, prestige:0, prestigeTokens:0
   });
-
-  let state = load();
-  let timerSec = 1500, timer = null, running = false, paused = false;
-
+  let state = load(), timerSec = 1500, timer = null, running = false, paused = false;
   const $ = id => document.getElementById(id);
-  const toast = msg => { const d=document.createElement('div'); d.className='toast'; d.textContent=msg; $('toastWrap').appendChild(d); setTimeout(()=>d.remove(), 3200); };
-  const burst = () => { for(let i=0;i<8;i++){ const b=document.createElement('div'); b.className='burst'; const x=Math.random()*window.innerWidth,y=Math.random()*window.innerHeight,s=8+Math.random()*16; b.style.left=x+'px'; b.style.top=y+'px'; b.style.width=b.style.height=s+'px'; document.body.appendChild(b); setTimeout(()=>b.remove(),650); } };
-  const modal = (t,m) => { $('modalTitle').textContent=t; $('modalText').textContent=m; $('modal').classList.add('show'); };
-  const closeModal = () => $('modal').classList.remove('show');
-  const level = () => Math.floor(state.xp/1000)+1;
-  const currentXp = () => state.xp % 1000;
-  const rank = () => level()>=100?'Exam Titan':level()>=50?'Exam Destroyer':level()>=20?'Focus Machine':level()>=10?'Memory Beast':level()>=5?'Scholar':'Rookie';
-  const countChapters = () => state.chapters.filter(Boolean).length;
-  const petMult = () => {
-    let m=1;
-    if(state.pets.brainbot) m*=1.05;
-    if(state.pets.dragon) m*=1.10;
-    if(state.pets.owl) m*=1.05;
-    return m;
-  };
 
-  function load(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? Object.assign(defaultState(), JSON.parse(raw)) : defaultState();
-    }catch(e){ return defaultState(); }
-  }
+  function load(){ try{ const raw = localStorage.getItem(STORAGE_KEY); return raw ? Object.assign(defaultState(), JSON.parse(raw)) : defaultState(); }catch(e){ return defaultState(); } }
   function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
+  function toast(msg){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; $('toastWrap').appendChild(d); setTimeout(()=>d.remove(),3200); }
+  function burst(){ for(let i=0;i<8;i++){ const b=document.createElement('div'); b.className='burst'; const x=Math.random()*window.innerWidth,y=Math.random()*window.innerHeight,s=8+Math.random()*16; b.style.left=x+'px'; b.style.top=y+'px'; b.style.width=b.style.height=s+'px'; document.body.appendChild(b); setTimeout(()=>b.remove(),650); } }
+  function modal(t,m){ $('modalTitle').textContent=t; $('modalText').textContent=m; $('modal').classList.add('show'); }
+  function closeModal(){ $('modal').classList.remove('show'); }
+  function level(){ return Math.floor(state.xp/1000)+1; }
+  function currentXp(){ return state.xp % 1000; }
+  function rank(){ return level()>=100?'Exam Titan':level()>=50?'Exam Destroyer':level()>=20?'Focus Machine':level()>=10?'Memory Beast':level()>=5?'Scholar':'Rookie'; }
+  function countStages(){ return state.stages.filter(Boolean).length; }
+  function petMult(){ let m=1; if(state.pets.brainbot) m*=1.05; if(state.pets.dragon) m*=1.10; if(state.pets.owl) m*=1.05; return m; }
+
   function updateStreak(){
-    const today = new Date().toISOString().slice(0,10);
+    const today=new Date().toISOString().slice(0,10);
     if(!state.lastStudyDate){ state.streak=1; state.bestStreak=1; state.lastStudyDate=today; return; }
-    const diff = Math.round((new Date(today+'T00:00:00') - new Date(state.lastStudyDate+'T00:00:00')) / 86400000);
+    const diff=Math.round((new Date(today+'T00:00:00')-new Date(state.lastStudyDate+'T00:00:00'))/86400000);
     if(diff===0) return;
     state.streak = diff===1 ? state.streak+1 : 1;
     state.bestStreak = Math.max(state.bestStreak, state.streak);
@@ -281,39 +259,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function addXp(v, silent=false){
+    const bonus = 1 + state.prestige*0.02 + (state.skills.quick ? 0.05 : 0);
+    const gained = Math.round(v * petMult() * bonus);
     const before = level();
-    const bonus = 1 + state.prestige*0.02 + (state.skills.quick ? 0.05 : 0) + (state.skills.revision ? 0.05 : 0);
-    state.xp += Math.round(v * petMult() * bonus);
+    state.xp += gained;
     if(level()>before){ toast(`Level Up! ${level()}`); modal('Level Up', `You reached level ${level()}.`); burst(); }
-    if(!silent) toast(`+${Math.round(v*petMult()*bonus)} XP`);
+    if(!silent) toast(`+${gained} XP`);
     save(); render();
   }
   function addCoins(v){ state.coins += v; save(); render(); }
 
   function buildQuests(){
-    const today = new Date().toISOString().slice(0,10);
+    const today=new Date().toISOString().slice(0,10);
     if(state.questDate===today && state.quests.length) return;
-    state.questDate = today;
-    const isRare = Math.random();
-    const mult = isRare < .55 ? 1 : isRare < .82 ? 2 : isRare < .95 ? 3 : 4;
-    state.quests = [
-      {id:'q1', name:'Complete 1 chapter', type:'chapter', target:1, progress:0, done:false, rewardXp:180+50*mult, rewardCoins:35+10*mult},
-      {id:'q2', name:'Finish 2 focus sessions', type:'session', target:2, progress:0, done:false, rewardXp:220+50*mult, rewardCoins:45+10*mult},
-      {id:'q3', name:'Earn 500 XP today', type:'xp', target:500, progress:0, done:false, rewardXp:200+50*mult, rewardCoins:50+10*mult}
+    state.questDate=today;
+    const r=Math.random();
+    const mult=r<.55?1:r<.82?2:r<.95?3:4;
+    state.quests=[
+      {id:'q1',name:'Complete 2 stages',type:'stage',target:2,progress:0,done:false,rewardXp:180+50*mult,rewardCoins:35+10*mult},
+      {id:'q2',name:'Finish 2 focus sessions',type:'session',target:2,progress:0,done:false,rewardXp:220+50*mult,rewardCoins:45+10*mult},
+      {id:'q3',name:'Earn 500 XP today',type:'xp',target:500,progress:0,done:false,rewardXp:200+50*mult,rewardCoins:50+10*mult}
     ];
   }
   function progressQuest(type, amount=1){
     buildQuests();
-    state.quests.forEach(q => {
+    state.quests.forEach(q=>{
       if(q.done) return;
-      if(q.type===type) q.progress = Math.min(q.target, q.progress + amount);
-      if(q.type==='xp') q.progress = Math.min(q.target, state.xp % 1000);
+      if(q.type===type) q.progress=Math.min(q.target, q.progress+amount);
+      if(q.type==='xp') q.progress=Math.min(q.target, state.xp % 1000);
     });
     checkQuests();
   }
   function rewardQuest(q){
     if(q.done) return;
-    q.done = true;
+    q.done=true;
     addXp(q.rewardXp, true);
     addCoins(q.rewardCoins);
     toast(`Quest completed: ${q.name}`);
@@ -321,9 +300,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function checkQuests(){
     buildQuests();
-    state.quests.forEach(q => {
+    state.quests.forEach(q=>{
       if(q.done) return;
-      if(q.type==='chapter' && q.progress>=q.target) rewardQuest(q);
+      if(q.type==='stage' && q.progress>=q.target) rewardQuest(q);
       if(q.type==='session' && q.progress>=q.target) rewardQuest(q);
       if(q.type==='xp' && state.xp>=q.target) rewardQuest(q);
     });
@@ -331,62 +310,54 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function checkAchievements(){
-    const unlock = (name, cond, reward) => {
-      if(cond && !state.achievements[name]) {
-        state.achievements[name] = true;
-        addXp(reward, true);
+    const unlock=(name,cond,reward)=>{
+      if(cond && !state.achievements[name]){
+        state.achievements[name]=true;
+        addXp(reward,true);
         addCoins(40);
         toast(`Achievement unlocked: ${name}`);
         modal('Achievement Unlocked', name);
         burst();
       }
     };
-    unlock('First Blood', countChapters()>=1, 50);
+    unlock('First Blood', countStages()>=1, 50);
     unlock('Scholar', level()>=5, 100);
-    unlock('Beast Mode', countChapters()>=5, 150);
+    unlock('Beast Mode', countStages()>=5, 150);
     unlock('Focus Machine', state.sessions>=5, 150);
     unlock('Midterm Destroyer', state.xp>=5000, 200);
     unlock('Study Addict', state.streak>=7, 200);
     unlock('Exam Titan', level()>=100, 500);
   }
 
-  function masterChapter(i){
-    if(state.chapters[i]) return toast('Already mastered.');
-    state.chapters[i] = true;
+  function completeStage(i){
+    if(state.stages[i]) return toast('Already completed.');
+    state.stages[i]=true;
     updateStreak();
-    const skillBonus = state.skills.revision ? 1.05 : 1;
-    addXp(Math.round(chapters[i].reward * skillBonus));
+    addXp(stages[i].reward);
     addCoins(20);
-    state.skills.quick = level()>=2;
-    progressQuest('chapter');
+    progressQuest('stage');
     checkAchievements();
     save();
     render();
-    toast(`Chapter mastered: ${chapters[i].name}`);
+    toast(`Completed: Stage ${stages[i].stage}`);
     burst();
   }
-  function completeRandomChapter(){
-    const i = state.chapters.findIndex(v=>!v);
-    if(i<0) return toast('All chapters already mastered.');
-    masterChapter(i);
-  }
+  function completeRandomStage(){ const i=state.stages.findIndex(v=>!v); if(i<0) return toast('All stages already completed.'); completeStage(i); }
   function awardSession(shop=false){
     state.sessions++;
     state.hoursStudied += 25/60;
     updateStreak();
     addXp(95);
-    if(!shop) addCoins(10 + (state.skills.focus ? 1 : 0));
+    if(!shop) addCoins(10);
     progressQuest('session');
     checkAchievements();
-    save();
-    render();
-    toast('Session complete!');
+    save(); render(); toast('Session complete!');
   }
   function unlockNextPet(){
-    const pet = petDefs.find(p=>!state.pets[p.key]);
+    const pet=petDefs.find(p=>!state.pets[p.key]);
     if(!pet) return toast('All pets unlocked.');
     if(level()<pet.req) return toast(`Requires level ${pet.req}`);
-    state.pets[pet.key] = true;
+    state.pets[pet.key]=true;
     save(); render();
     modal('Pet Unlocked', `${pet.name} is now active. ${pet.bonus}`);
     toast(`${pet.name} unlocked!`);
@@ -394,248 +365,93 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function prestige(){
     if(level()<100) return toast('Reach level 100 first.');
-    state.prestige++;
-    state.prestigeTokens++;
-    state.xp=0;
-    state.chapters=Array(17).fill(false);
-    state.sessions=0;
-    state.hoursStudied=0;
-    state.streak=0;
-    state.bestStreak=0;
-    state.lastStudyDate='';
-    state.quests=[];
-    state.questDate='';
-    save(); render();
-    modal('Prestige Complete', `Tokens: ${state.prestigeTokens}`);
-    toast(`Prestige complete!`);
-    burst();
+    state.prestige++; state.prestigeTokens++; state.xp=0; state.stages=Array(stages.length).fill(false); state.sessions=0; state.hoursStudied=0; state.streak=0; state.bestStreak=0; state.lastStudyDate=''; state.quests=[]; state.questDate='';
+    save(); render(); modal('Prestige Complete', `Tokens: ${state.prestigeTokens}`); toast('Prestige complete!'); burst();
   }
+
   function startTimer(){
     if(running) return;
-    running = true; paused = false;
-    $('focusState').textContent = 'Running';
-    timer = setInterval(() => {
-      timerSec--;
-      renderTimer();
-      if(timerSec <= 0){
-        clearInterval(timer);
-        running = false; paused = false;
-        timerSec = 1500;
-        renderTimer();
-        awardSession();
-        modal('Focus Reward', 'Your 25-minute session finished. Rewards granted.');
-        burst();
-      }
-    }, 1000);
+    running=true; paused=false; $('focusState').textContent='Running';
+    timer=setInterval(()=>{ timerSec--; renderTimer(); if(timerSec<=0){ clearInterval(timer); running=false; paused=false; timerSec=1500; renderTimer(); awardSession(); modal('Focus Reward','Your 25-minute session finished. Rewards granted.'); burst(); } },1000);
   }
-  function pauseTimer(){
-    if(!running) return;
-    clearInterval(timer);
-    running = false;
-    paused = true;
-    $('focusState').textContent = 'Paused';
-  }
+  function pauseTimer(){ if(!running) return; clearInterval(timer); running=false; paused=true; $('focusState').textContent='Paused'; }
   function resumeTimer(){ if(!paused) return; startTimer(); }
-  function resetTimer(){
-    clearInterval(timer);
-    timerSec = 1500;
-    running = false;
-    paused = false;
-    $('focusState').textContent = 'Ready';
-    renderTimer();
-  }
-  function renderTimer(){ $('timerText').textContent = `${String(Math.floor(timerSec/60)).padStart(2,'0')}:${String(timerSec%60).padStart(2,'0')}`; }
+  function resetTimer(){ clearInterval(timer); timerSec=1500; running=false; paused=false; $('focusState').textContent='Ready'; renderTimer(); }
+  function renderTimer(){ $('timerText').textContent=`${String(Math.floor(timerSec/60)).padStart(2,'0')}:${String(timerSec%60).padStart(2,'0')}`; }
 
-  function saveExamDate(){
-    state.examDate = $('examDateInput').value;
-    save(); render();
-    toast('Exam date saved.');
-  }
+  function saveExamDate(){ state.examDate=$('examDateInput').value; save(); render(); toast('Exam date saved.'); }
   function tickExam(){
-    if(!state.examDate){
-      $('daysLeft').textContent='0';
-      $('timeLeft').textContent='00:00:00';
-      $('examSetText').textContent='Not set';
-      return;
-    }
-    const t = new Date(state.examDate+'T00:00:00').getTime() - Date.now();
-    const s = Math.max(0, Math.floor(t/1000));
-    $('daysLeft').textContent = Math.floor(s/86400);
-    $('timeLeft').textContent = `${String(Math.floor((s%86400)/3600)).padStart(2,'0')}:${String(Math.floor((s%3600)/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
-    $('examSetText').textContent = 'Exam Set';
+    if(!state.examDate){ $('daysLeft').textContent='0'; $('timeLeft').textContent='00:00:00'; $('examSetText').textContent='Not set'; return; }
+    const t=new Date(state.examDate+'T00:00:00').getTime()-Date.now(); const s=Math.max(0,Math.floor(t/1000));
+    $('daysLeft').textContent=Math.floor(s/86400);
+    $('timeLeft').textContent=`${String(Math.floor((s%86400)/3600)).padStart(2,'0')}:${String(Math.floor((s%3600)/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+    $('examSetText').textContent='Exam Set';
   }
 
   function addPlayer(){
-    const n = ($('playerName').value || '').trim();
-    if(!n) return toast('Enter a player name.');
-    const xp = Math.floor(Math.random()*8000) + Math.floor(state.xp*0.2);
-    state.leaderboard.push({name:n,xp});
-    state.leaderboard.sort((a,b)=>b.xp-a.xp);
-    $('playerName').value='';
-    save(); render();
-    toast(`Added ${n}`);
+    const n=($('playerName').value||'').trim(); if(!n) return toast('Enter a player name.');
+    const xp=Math.floor(Math.random()*8000)+Math.floor(state.xp*0.2);
+    state.leaderboard.push({name:n,xp}); state.leaderboard.sort((a,b)=>b.xp-a.xp); $('playerName').value=''; save(); render(); toast(`Added ${n}`);
   }
+  function exportSave(){ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='hyper-study-runner-v7-save.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); toast('Save exported.'); }
+  function importSave(ev){ const f=ev.target.files&&ev.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=e=>{ try{ state=Object.assign(defaultState(), JSON.parse(e.target.result)); save(); render(); toast('Save imported.'); }catch(err){ toast('Invalid save file.'); } }; r.readAsText(f); }
+  function buyShop(i){ const item=shopDefs[i]; if(state.coins<item.cost) return toast('Not enough coins.'); state.coins-=item.cost; item.act(); save(); render(); toast(`${item.label} purchased.`); burst(); }
 
-  function exportSave(){
-    const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'hyper-study-runner-v7-save.json';
-    a.click();
-    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-    toast('Save exported.');
-  }
-  function importSave(ev){
-    const f = ev.target.files && ev.target.files[0];
-    if(!f) return;
-    const r = new FileReader();
-    r.onload = e => {
-      try{
-        state = Object.assign(defaultState(), JSON.parse(e.target.result));
-        save(); render();
-        toast('Save imported.');
-      }catch(err){ toast('Invalid save file.'); }
-    };
-    r.readAsText(f);
-  }
-
-  function buyShop(i){
-    const item = shopDefs[i];
-    if(state.coins < item.cost) return toast('Not enough coins.');
-    state.coins -= item.cost;
-    item.act();
-    save(); render();
-    toast(`${item.label} purchased.`);
-    burst();
-  }
-  function soundToggle(name){
-    state.sounds[name] = !state.sounds[name];
-    save(); render();
-    toast(`${name} ${state.sounds[name] ? 'playing' : 'paused'}`);
-  }
-  function soundStop(name){
-    state.sounds[name] = false;
-    save(); render();
-    toast(`${name} stopped`);
-  }
-
-  function renderSkills(){
-    return skillDefs.map(s => {
-      const ok = level() >= s.req;
-      state.skills[s.name.split(' ')[0].toLowerCase()] = state.skills[s.name.split(' ')[0].toLowerCase()] || ok;
-      return `<div class="skill ${ok ? '' : 'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${s.name}</strong><span class="badge">Lv ${s.req}</span></div><div class="meta">${s.desc}</div><div class="meta">${ok ? 'Unlocked' : 'Locked'}</div></div>`;
-    }).join('');
+  function renderWorlds(){
+    const grouped = stages.reduce((acc,s,idx)=>{ (acc[s.world]||(acc[s.world]=[])).push({...s, idx}); return acc; }, {});
+    return Object.entries(grouped).map(([world, list]) => `
+      <div style="margin-bottom:18px">
+        <h3 class="worldTitle">${world}</h3>
+        <div class="chapterGrid">
+          ${list.map(s=>`
+            <div class="chapter ${state.stages[s.idx] ? 'completed' : ''}" data-stage="${s.idx}">
+              <h3>Stage ${s.stage}: ${s.title}</h3>
+              <p>${s.desc}</p>
+              <div class="reward">Reward: +${s.reward} XP, +20 coins</div>
+              <div class="btnRow"><button class="btn ${state.stages[s.idx] ? 'secondary' : 'good'} stageBtn" data-index="${s.idx}">${state.stages[s.idx] ? 'COMPLETED' : 'COMPLETE STAGE'}</button></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
   }
 
   function render(){
-    buildQuests();
-    checkQuests();
-    checkAchievements();
-
-    $('levelText').textContent = level();
-    $('xpText').textContent = state.xp;
-    $('coinText').textContent = state.coins;
-    $('rankText').textContent = rank();
-    $('bigLevel').textContent = level();
-    $('bigRank').textContent = rank();
-    $('xpNeedText').textContent = `${currentXp()} / 1000`;
-    $('xpBar').style.width = `${currentXp()/10}%`;
-    $('chapterStatus').textContent = `${countChapters()} / 17 mastered`;
-    $('sessionText').textContent = state.sessions;
-    $('hoursText').textContent = state.hoursStudied.toFixed(1);
-    $('streakText').textContent = state.streak;
-    $('bestStreakText').textContent = state.bestStreak;
-    $('achCount').textContent = `${Object.values(state.achievements).filter(Boolean).length} unlocked`;
-    $('questDateText').textContent = state.questDate || 'Today';
-    $('shopCoins').textContent = `${state.coins} coins`;
-    $('examDateInput').value = state.examDate || '';
-    $('soundLofiState').textContent = state.sounds.lofi ? 'Playing' : 'Idle';
-    $('soundRainState').textContent = state.sounds.rain ? 'Playing' : 'Idle';
-    $('soundLibraryState').textContent = state.sounds.library ? 'Playing' : 'Idle';
-    $('soundWhiteState').textContent = state.sounds.white ? 'Playing' : 'Idle';
-    $('focusState').textContent = running ? 'Running' : paused ? 'Paused' : 'Ready';
-
-    $('chapterGrid').innerHTML = chapters.map((c,i)=>`
-      <div class="chapter ${state.chapters[i] ? 'completed' : ''}" data-chapter="${i}">
-        <h3>${String(i+1).padStart(2,'0')}. ${c.name}</h3>
-        <p>${c.desc}</p>
-        <div class="reward">Reward: +${c.reward} XP, +20 coins</div>
-        <div class="btnRow"><button class="btn ${state.chapters[i] ? 'secondary' : 'good'} chapterBtn" data-index="${i}">${state.chapters[i] ? 'MASTERED' : 'MASTER CHAPTER'}</button></div>
-      </div>
-    `).join('');
-
-    $('questList').innerHTML = state.quests.map(q => {
-      const progress = q.type === 'xp' ? Math.min(q.progress, q.target) : q.progress;
-      return `<div class="quest ${q.done ? 'done' : ''}">
-        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
-          <strong>${q.name}</strong>
-          <span class="badge">+${q.rewardXp} XP / +${q.rewardCoins} Coins</span>
-        </div>
-        <div class="meta">Progress: ${progress}/${q.target}</div>
-        <div class="progress" style="margin-top:8px"><span style="width:${Math.min(100, (progress/q.target)*100)}%"></span></div>
-      </div>`;
+    buildQuests(); checkQuests(); checkAchievements();
+    $('levelText').textContent=level(); $('xpText').textContent=state.xp; $('coinText').textContent=state.coins; $('rankText').textContent=rank();
+    $('bigLevel').textContent=level(); $('bigRank').textContent=rank(); $('xpNeedText').textContent=`${currentXp()} / 1000`; $('xpBar').style.width=`${currentXp()/10}%`;
+    $('chapterStatus').textContent=`${countStages()} / ${stages.length} mastered`; $('sessionText').textContent=state.sessions; $('hoursText').textContent=state.hoursStudied.toFixed(1);
+    $('streakText').textContent=state.streak; $('bestStreakText').textContent=state.bestStreak; $('achCount').textContent=`${Object.values(state.achievements).filter(Boolean).length} unlocked`;
+    $('questDateText').textContent=state.questDate||'Today'; $('shopCoins').textContent=`${state.coins} coins`; $('examDateInput').value=state.examDate||''; $('focusState').textContent=running?'Running':paused?'Paused':'Ready';
+    $('worldList').innerHTML = renderWorlds();
+    $('questList').innerHTML = state.quests.map(q=>{
+      const p = q.type==='xp' ? Math.min(state.xp,q.target) : q.progress;
+      return `<div class="quest ${q.done?'done':''}"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><strong>${q.name}</strong><span class="badge">+${q.rewardXp} XP / +${q.rewardCoins} Coins</span></div><div class="meta">Progress: ${p}/${q.target}</div><div class="progress" style="margin-top:8px"><span style="width:${Math.min(100,(p/q.target)*100)}%"></span></div></div>`;
     }).join('');
-
     $('achGrid').innerHTML = [
-      ['First Blood','Complete 1 chapter',50, countChapters()>=1],
+      ['First Blood','Complete 1 stage',50, countStages()>=1],
       ['Scholar','Reach level 5',100, level()>=5],
-      ['Beast Mode','Complete 5 chapters',150, countChapters()>=5],
+      ['Beast Mode','Complete 5 stages',150, countStages()>=5],
       ['Focus Machine','Finish 5 sessions',150, state.sessions>=5],
       ['Midterm Destroyer','Reach 5000 XP',200, state.xp>=5000],
       ['Study Addict','Maintain 7-day streak',200, state.streak>=7],
       ['Exam Titan','Reach level 100',500, level()>=100]
-    ].map(([n,d,r,ok])=>`<div class="achievement ${ok ? '' : 'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${n}</strong><span class="badge">+${r} XP</span></div><div class="meta">${d}</div><div class="meta">${ok ? 'Unlocked' : 'Locked'}</div></div>`).join('');
-
-    $('petGrid').innerHTML = petDefs.map(p => {
-      const ok = level() >= p.req;
-      const active = state.pets[p.key];
-      return `<div class="pet ${ok ? '' : 'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${p.name}</strong><span class="badge">Lv ${p.req}</span></div><div class="meta">${p.bonus}</div><div class="meta">${ok ? 'Unlocked' : 'Locked'}${active ? ' • Active' : ''}</div></div>`;
-    }).join('');
-
-    $('skillGrid').innerHTML = renderSkills();
-
+    ].map(([n,d,r,ok])=>`<div class="achievement ${ok?'':'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${n}</strong><span class="badge">+${r} XP</span></div><div class="meta">${d}</div><div class="meta">${ok?'Unlocked':'Locked'}</div></div>`).join('');
+    $('petGrid').innerHTML = petDefs.map(p=>{ const ok=level()>=p.req; const active=state.pets[p.key]; return `<div class="pet ${ok?'':'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${p.name}</strong><span class="badge">Lv ${p.req}</span></div><div class="meta">${p.bonus}</div><div class="meta">${ok?'Unlocked':'Locked'}${active?' • Active':''}</div></div>`; }).join('');
+    $('skillGrid').innerHTML = skillDefs.map(s=>{ const ok=level()>=s.req; return `<div class="skill ${ok?'':'locked'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${s.name}</strong><span class="badge">Lv ${s.req}</span></div><div class="meta">${s.desc}</div><div class="meta">${ok?'Unlocked':'Locked'}</div></div>`; }).join('');
     $('leaderGrid').innerHTML = state.leaderboard.slice(0,10).map((p,i)=>`<div class="leader"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>#${i+1} ${p.name}</strong><span class="badge">Lv ${Math.floor(p.xp/1000)+1}</span></div><div class="meta">XP: ${p.xp}</div></div>`).join('');
-
     $('shopGrid').innerHTML = shopDefs.map((s,i)=>`<div class="shopItem"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>${s.label}</strong><span class="badge">${s.cost} coins</span></div><div class="meta">${s.desc}</div><div class="btnRow"><button class="btn warn shopBtn" data-shop="${i}">Buy</button></div></div>`).join('');
-
-    tickExam();
-    save();
+    tickExam(); save();
   }
 
   function initParticles(){
-    const root = $('bgParticles');
-    for(let i=0;i<44;i++){
-      const p=document.createElement('div');
-      p.className='particle';
-      const s=3+Math.random()*8;
-      p.style.width=p.style.height=s+'px';
-      p.style.left=Math.random()*100+'%';
-      p.style.top=Math.random()*100+'%';
-      p.dataset.x=(Math.random()*2-1);
-      p.dataset.y=(0.2+Math.random()*0.9);
-      root.appendChild(p);
-    }
-    setInterval(()=>{
-      root.querySelectorAll('.particle').forEach(p=>{
-        let x=parseFloat(p.style.left), y=parseFloat(p.style.top);
-        x += parseFloat(p.dataset.x)*0.04;
-        y -= parseFloat(p.dataset.y)*0.04;
-        if(y < -5){ y = 105; x = Math.random()*100; }
-        if(x > 105) x = -5;
-        if(x < -5) x = 105;
-        p.style.left = x + '%';
-        p.style.top = y + '%';
-      });
-    },40);
+    const root=$('bgParticles');
+    for(let i=0;i<44;i++){ const p=document.createElement('div'); p.className='particle'; const s=3+Math.random()*8; p.style.width=p.style.height=s+'px'; p.style.left=Math.random()*100+'%'; p.style.top=Math.random()*100+'%'; p.dataset.x=(Math.random()*2-1); p.dataset.y=(0.2+Math.random()*0.9); root.appendChild(p); }
+    setInterval(()=>{ root.querySelectorAll('.particle').forEach(p=>{ let x=parseFloat(p.style.left), y=parseFloat(p.style.top); x+=parseFloat(p.dataset.x)*0.04; y-=parseFloat(p.dataset.y)*0.04; if(y<-5){y=105;x=Math.random()*100} if(x>105)x=-5; if(x<-5)x=105; p.style.left=x+'%'; p.style.top=y+'%'; }); },40);
   }
 
   $('modalOk').addEventListener('click', closeModal);
-  $('themeBtn').addEventListener('click', ()=>{
-    state.settings.theme = state.settings.theme === 'neon' ? 'midnight' : 'neon';
-    document.documentElement.style.setProperty('--cyan', state.settings.theme === 'midnight' ? '#7afcff' : '#41f3ff');
-    document.documentElement.style.setProperty('--purple', state.settings.theme === 'midnight' ? '#7a5cff' : '#b44cff');
-    save(); render(); toast(`Theme: ${state.settings.theme}`);
-  });
+  $('themeBtn').addEventListener('click', ()=>{ state.settings.theme=state.settings.theme==='neon'?'midnight':'neon'; document.documentElement.style.setProperty('--cyan', state.settings.theme==='midnight'?'#7afcff':'#41f3ff'); document.documentElement.style.setProperty('--purple', state.settings.theme==='midnight'?'#7a5cff':'#b44cff'); save(); render(); toast(`Theme: ${state.settings.theme}`); });
   $('exportBtn').addEventListener('click', exportSave);
   $('importBtn').addEventListener('click', ()=>$('importFile').click());
   $('importFile').addEventListener('change', importSave);
@@ -647,18 +463,16 @@ document.addEventListener('DOMContentLoaded', () => {
   $('saveExamBtn').addEventListener('click', saveExamDate);
   $('addPlayerBtn').addEventListener('click', addPlayer);
 
-  $('chapterGrid').addEventListener('click', e => {
-    const b = e.target.closest('.chapterBtn');
+  $('worldList').addEventListener('click', e => {
+    const b = e.target.closest('.stageBtn');
     if(!b) return;
-    masterChapter(Number(b.dataset.index));
+    completeStage(Number(b.dataset.index));
   });
   $('shopGrid').addEventListener('click', e => {
     const b = e.target.closest('.shopBtn');
     if(!b) return;
     buyShop(Number(b.dataset.shop));
   });
-  document.querySelectorAll('.soundBtn').forEach(b => b.addEventListener('click', ()=>soundToggle(b.dataset.sound)));
-  document.querySelectorAll('.stopBtn').forEach(b => b.addEventListener('click', ()=>soundStop(b.dataset.sound)));
 
   window.addEventListener('focus', ()=>{ updateStreak(); buildQuests(); checkQuests(); render(); });
   setInterval(()=>{ renderTimer(); tickExam(); save(); },1000);
